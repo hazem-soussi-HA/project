@@ -1,0 +1,571 @@
+<!-- Service Navigation Component -->
+<div class="service-navigation">
+    <div class="service-header">
+        <h3 class="service-title">
+            <i class="fas fa-cube"></i>
+            Quantum Services
+        </h3>
+        <p class="service-subtitle">Explore quantum-based applications and experiences</p>
+    </div>
+    
+    <div class="service-grid">
+        {% for service in services %}
+        <div class="service-card" data-service="{{ service.url }}">
+            <div class="service-icon">
+                <i class="{{ service.icon }}"></i>
+            </div>
+            <div class="service-content">
+                <h5 class="service-name">{{ service.name }}</h5>
+                <p class="service-description">{{ service.description }}</p>
+            </div>
+            <div class="service-actions">
+                <a href="{% url service.url %}" class="btn btn-primary service-link">
+                    Launch
+                    <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    
+    <!-- Quick Actions -->
+    <div class="quick-actions">
+        <h6 class="quick-actions-title">
+            <i class="fas fa-bolt"></i>
+            Quick Actions
+        </h6>
+        <div class="quick-actions-grid">
+            <button class="quick-action-btn" onclick="startQuantumSession()">
+                <i class="fas fa-play-circle"></i>
+                Start Quantum Session
+            </button>
+            <button class="quick-action-btn" onclick="loadRecentActivity()">
+                <i class="fas fa-history"></i>
+                Recent Activity
+            </button>
+            <button class="quick-action-btn" onclick="showQuantumStats()">
+                <i class="fas fa-chart-line"></i>
+                Quantum Stats
+            </button>
+            <button class="quick-action-btn" onclick="toggleQuantumMode()">
+                <i class="fas fa-infinity"></i>
+                Quantum Mode
+            </button>
+        </div>
+    </div>
+</div>
+
+<style>
+.service-navigation {
+    padding: 2rem;
+    background: linear-gradient(135deg, rgba(248, 250, 252, 0.8), rgba(255, 255, 255, 0.9));
+    backdrop-filter: blur(20px);
+    border-radius: 20px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    margin-bottom: 2rem;
+}
+
+.service-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.service-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #1f2937;
+    margin-bottom: 0.5rem;
+    background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.service-subtitle {
+    color: #6b7280;
+    font-size: 1.1rem;
+    max-width: 600px;
+    margin: 0 auto;
+    line-height: 1.6;
+}
+
+.service-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.service-card {
+    background: white;
+    border-radius: 16px;
+    padding: 1.5rem;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+}
+
+.service-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #3b82f6, #8b5cf6, #10b981);
+    transform: scaleX(0);
+    transition: transform 0.4s ease;
+}
+
+.service-card:hover::before {
+    transform: scaleX(1);
+}
+
+.service-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 12px 40px rgba(59, 130, 246, 0.2);
+    border-color: #3b82f6;
+}
+
+.service-icon {
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1rem;
+    transition: all 0.4s ease;
+}
+
+.service-card:hover .service-icon {
+    transform: scale(1.1) rotate(5deg);
+    box-shadow: 0 8px 25px rgba(59, 130, 246, 0.3);
+}
+
+.service-icon i {
+    font-size: 1.5rem;
+    color: white;
+}
+
+.service-content {
+    margin-bottom: 1rem;
+}
+
+.service-name {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #1f2937;
+    margin-bottom: 0.5rem;
+}
+
+.service-description {
+    color: #6b7280;
+    line-height: 1.6;
+    margin-bottom: 0;
+}
+
+.service-actions {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.service-link {
+    background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+    border: none;
+    border-radius: 12px;
+    padding: 0.75rem 1.5rem;
+    color: white;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.service-link::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s ease;
+}
+
+.service-link:hover::before {
+    left: 100%;
+}
+
+.service-link:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
+    color: white;
+}
+
+.service-link i {
+    transition: transform 0.3s ease;
+}
+
+.service-link:hover i {
+    transform: translateX(4px);
+}
+
+/* Quick Actions */
+.quick-actions {
+    background: rgba(255, 255, 255, 0.6);
+    border-radius: 16px;
+    padding: 1.5rem;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.quick-actions-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.quick-actions-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+}
+
+.quick-action-btn {
+    background: rgba(59, 130, 246, 0.1);
+    border: 1px solid rgba(59, 130, 246, 0.2);
+    border-radius: 12px;
+    padding: 1rem;
+    color: #3b82f6;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    font-weight: 500;
+    font-size: 0.9rem;
+}
+
+.quick-action-btn:hover {
+    background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(59, 130, 246, 0.3);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .service-navigation {
+        padding: 1rem;
+        margin: 1rem;
+    }
+    
+    .service-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+    
+    .quick-actions-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .service-title {
+        font-size: 1.5rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .quick-actions-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Animation for service cards */
+@keyframes serviceCardSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(30px) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.service-card {
+    animation: serviceCardSlideIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+}
+
+.service-card:nth-child(1) { animation-delay: 0.1s; }
+.service-card:nth-child(2) { animation-delay: 0.2s; }
+.service-card:nth-child(3) { animation-delay: 0.3s; }
+.service-card:nth-child(4) { animation-delay: 0.4s; }
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Add click animation to service cards
+    const serviceCards = document.querySelectorAll('.service-card');
+    serviceCards.forEach(card => {
+        card.addEventListener('click', function() {
+            // Add ripple effect
+            const ripple = document.createElement('div');
+            ripple.className = 'service-ripple';
+            this.appendChild(ripple);
+            
+            setTimeout(() => {
+                ripple.remove();
+            }, 600);
+            
+            // Trigger navigation
+            const serviceLink = this.querySelector('.service-link');
+            if (serviceLink) {
+                window.location.href = serviceLink.href;
+            }
+        });
+        
+        // Add hover effect
+        card.addEventListener('mouseenter', function() {
+            this.style.zIndex = '10';
+        });
+        
+        card.addEventListener('mouseleave', function() {
+            this.style.zIndex = '';
+        });
+    });
+    
+    // Quick action functions
+    window.startQuantumSession = function() {
+        // Create quantum session indicator
+        const sessionModal = createQuantumModal();
+        sessionModal.show();
+    };
+    
+    window.loadRecentActivity = function() {
+        // Simulate loading recent activity
+        showNotification('Loading recent quantum activity...', 'info');
+        setTimeout(() => {
+            showNotification('Recent activity loaded from quantum database', 'success');
+        }, 2000);
+    };
+    
+    window.showQuantumStats = function() {
+        // Show quantum statistics
+        const statsModal = createStatsModal();
+        statsModal.show();
+    };
+    
+    window.toggleQuantumMode = function() {
+        // Toggle quantum mode for enhanced experiences
+        document.body.classList.toggle('quantum-mode');
+        const isActive = document.body.classList.contains('quantum-mode');
+        
+        showNotification(
+            isActive ? 'Quantum mode activated - Enhanced reality active' : 'Quantum mode deactivated - Standard reality restored',
+            isActive ? 'success' : 'info'
+        );
+    };
+    
+    // Utility functions
+    function createQuantumModal() {
+        return {
+            show: function() {
+                const modal = document.createElement('div');
+                modal.className = 'quantum-modal';
+                modal.innerHTML = `
+                    <div class="modal-content">
+                        <h4><i class="fas fa-infinity"></i> Quantum Session Initiated</h4>
+                        <p>Preparing quantum environment for enhanced AI consciousness interaction...</p>
+                        <div class="quantum-loading">
+                            <div class="quantum-particle"></div>
+                            <div class="quantum-particle"></div>
+                            <div class="quantum-particle"></div>
+                        </div>
+                        <button onclick="this.closest('.quantum-modal').remove()">Enter Quantum Realm</button>
+                    </div>
+                `;
+                document.body.appendChild(modal);
+                
+                setTimeout(() => modal.remove(), 3000);
+            }
+        };
+    }
+    
+    function createStatsModal() {
+        const stats = [
+            { label: 'Quantum Entities Spawned', value: '1,247', trend: '+12%' },
+            { label: 'Consciousness Interactions', value: '8,942', trend: '+5%' },
+            { label: 'Reality States Explored', value: '6', trend: 'Stable' },
+            { label: 'Quantum Coherence', value: '99.7%', trend: '+0.3%' }
+        ];
+        
+        return {
+            show: function() {
+                const modal = document.createElement('div');
+                modal.className = 'stats-modal';
+                modal.innerHTML = `
+                    <div class="modal-content">
+                        <h4><i class="fas fa-chart-line"></i> Quantum Statistics</h4>
+                        <div class="stats-grid">
+                            ${stats.map(stat => `
+                                <div class="stat-item">
+                                    <div class="stat-label">${stat.label}</div>
+                                    <div class="stat-value">${stat.value}</div>
+                                    <div class="stat-trend">${stat.trend}</div>
+                                </div>
+                            `).join('')}
+                        </div>
+                        <button onclick="this.closest('.stats-modal').remove()">Close</button>
+                    </div>
+                `;
+                document.body.appendChild(modal);
+            }
+        };
+    }
+    
+    function showNotification(message, type = 'info') {
+        const notification = document.createElement('div');
+        notification.className = `notification ${type}`;
+        notification.textContent = message;
+        
+        document.body.appendChild(notification);
+        
+        setTimeout(() => {
+            notification.classList.add('show');
+        }, 100);
+        
+        setTimeout(() => {
+            notification.classList.remove('show');
+            setTimeout(() => notification.remove(), 300);
+        }, 3000);
+    }
+});
+
+// Add CSS for quantum modal and notifications
+const style = document.createElement('style');
+style.textContent = `
+.quantum-modal, .stats-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+}
+
+.modal-content {
+    background: white;
+    padding: 2rem;
+    border-radius: 16px;
+    text-align: center;
+    max-width: 400px;
+    animation: modalSlideIn 0.3s ease;
+}
+
+.quantum-loading {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin: 1rem 0;
+}
+
+.quantum-particle {
+    width: 10px;
+    height: 10px;
+    background: linear-gradient(45deg, #3b82f6, #8b5cf6);
+    border-radius: 50%;
+    animation: quantumPulse 1.5s infinite;
+}
+
+.quantum-particle:nth-child(2) { animation-delay: 0.3s; }
+.quantum-particle:nth-child(3) { animation-delay: 0.6s; }
+
+@keyframes quantumPulse {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.5); opacity: 0.7; }
+}
+
+.stats-grid {
+    display: grid;
+    gap: 1rem;
+    margin: 1rem 0;
+}
+
+.stat-item {
+    text-align: center;
+    padding: 1rem;
+    background: rgba(59, 130, 246, 0.1);
+    border-radius: 8px;
+}
+
+.stat-label { font-size: 0.9rem; color: #6b7280; }
+.stat-value { font-size: 1.5rem; font-weight: bold; color: #3b82f6; }
+.stat-trend { font-size: 0.8rem; color: #10b981; }
+
+.notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 1rem 1.5rem;
+    background: #3b82f6;
+    color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transform: translateX(100%);
+    transition: transform 0.3s ease;
+    z-index: 3000;
+}
+
+.notification.show {
+    transform: translateX(0);
+}
+
+.notification.success { background: #10b981; }
+.notification.warning { background: #f59e0b; }
+.notification.error { background: #ef4444; }
+
+@keyframes modalSlideIn {
+    from { transform: translateY(-50px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+.service-ripple {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 10px;
+    height: 10px;
+    background: rgba(59, 130, 246, 0.3);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    animation: rippleExpand 0.6s ease-out;
+    pointer-events: none;
+}
+
+@keyframes rippleExpand {
+    to {
+        width: 200px;
+        height: 200px;
+        opacity: 0;
+    }
+}
+`;
+document.head.appendChild(style);
+</script>

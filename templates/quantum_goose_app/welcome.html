@@ -1,0 +1,162 @@
+{% extends 'quantum_goose_app/base.html' %}
+{% load static %}
+
+{% block title %}Welcome - {{ project_name }}{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="jumbotron text-center bg-primary text-white p-5 rounded">
+            <h1 class="display-4">
+                <i class="fas fa-quidditch"></i>
+                Welcome to {{ project_name }}
+            </h1>
+            <p class="lead">{{ description }}</p>
+            <hr class="my-4" style="border-color: rgba(255,255,255,0.3);">
+            <p>A powerful combination of Django backend with React frontend integration</p>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-5">
+    <!-- Django Information -->
+    <div class="col-md-6">
+        <div class="card h-100">
+            <div class="card-header bg-success text-white">
+                <h4><i class="fab fa-python"></i> Django Backend</h4>
+            </div>
+            <div class="card-body">
+                <p class="card-text">
+                    The Django backend provides a robust foundation with:
+                </p>
+                <ul>
+                    <li><strong>Templates:</strong> Organized in <code>templates/quantum_goose_app/</code></li>
+                    <li><strong>Static Files:</strong> CSS, JS, and images in <code>static/</code></li>
+                    <li><strong>API Endpoints:</strong> RESTful APIs for React integration</li>
+                    <li><strong>Database:</strong> SQLite with Django ORM</li>
+                    <li><strong>Admin Panel:</strong> Available at <code>/admin/</code></li>
+                </ul>
+                
+                <div class="mt-3">
+                    <h6>Available Endpoints:</h6>
+                    <ul class="list-unstyled">
+                        <li><code>GET /</code> - Welcome page</li>
+                        <li><code>GET /admin/</code> - Django admin</li>
+                        <li><code>GET /quantum-goose-app/api/</code> - API info</li>
+                        <li><code>GET /quantum-goose-app/health/</code> - Health check</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- React Information -->
+    <div class="col-md-6">
+        <div class="card h-100">
+            <div class="card-header bg-info text-white">
+                <h4><i class="fab fa-react"></i> React Frontend</h4>
+            </div>
+            <div class="card-body">
+                <p class="card-text">
+                    The React frontend application is located in <code>quantum-goose-app/</code>:
+                </p>
+                <ul>
+                    <li><strong>Source:</strong> <code>quantum-goose-app/src/</code></li>
+                    <li><strong>Build:</strong> <code>quantum-goose-app/dist/</code></li>
+                    <li><strong>Public Assets:</strong> <code>quantum-goose-app/public/</code></li>
+                    <li><strong>Package Manager:</strong> npm/pnpm</li>
+                </ul>
+                
+                <div class="mt-3">
+                    <h6>React App Integration:</h6>
+                    <ul class="list-unstyled">
+                        <li><code>GET /react/</code> - React app integration</li>
+                        <li><code>GET /react/static/</code> - Serve React static files</li>
+                        <li><code>POST /quantum-goose-app/api/</code> - API endpoints</li>
+                    </ul>
+                </div>
+
+                {% if react_app_available %}
+                    <div class="mt-3">
+                        <a href="{% url 'quantum_goose_app:react_integration' %}" class="btn btn-primary">
+                            <i class="fab fa-react"></i> View React App Integration
+                        </a>
+                    </div>
+                {% else %}
+                    <div class="alert alert-warning mt-3">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        React app not found. Please check if quantum-goose-app exists.
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Features Section -->
+<div class="row mt-5">
+    <div class="col-12">
+        <h3><i class="fas fa-star"></i> Key Features</h3>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body text-center">
+                        <i class="fas fa-project-diagram fa-3x text-primary mb-3"></i>
+                        <h5>Modular Structure</h5>
+                        <p class="card-text">Well-organized Django app with clean separation of concerns</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body text-center">
+                        <i class="fas fa-code-branch fa-3x text-success mb-3"></i>
+                        <h5>API Integration</h5>
+                        <p class="card-text">RESTful APIs for seamless frontend-backend communication</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body text-center">
+                        <i class="fas fa-mobile-alt fa-3x text-info mb-3"></i>
+                        <h5>Responsive Design</h5>
+                        <p class="card-text">Bootstrap-based styling that works on all devices</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Quick Start Guide -->
+<div class="row mt-5">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h4><i class="fas fa-rocket"></i> Quick Start Guide</h4>
+            </div>
+            <div class="card-body">
+                <h6>1. Run the Django Development Server:</h6>
+                <pre><code>cd /d/project
+python manage.py runserver</code></pre>
+
+                <h6>2. Build the React App (if needed):</h6>
+                <pre><code>cd /d/project/quantum-goose-app
+npm run build</code></pre>
+
+                <h6>3. Access the Applications:</h6>
+                <ul>
+                    <li><strong>Django Welcome:</strong> <a href="http://localhost:8000/" target="_blank">http://localhost:8000/</a></li>
+                    <li><strong>React App:</strong> <a href="http://localhost:8000/react/" target="_blank">http://localhost:8000/react/</a></li>
+                    <li><strong>Django Admin:</strong> <a href="http://localhost:8000/admin/" target="_blank">http://localhost:8000/admin/</a></li>
+                    <li><strong>API Documentation:</strong> <a href="http://localhost:8000/quantum-goose-app/api/" target="_blank">http://localhost:8000/quantum-goose-app/api/</a></li>
+                </ul>
+
+                <h6>4. Test the Integration:</h6>
+                <pre><code>curl http://localhost:8000/quantum-goose-app/health/</code></pre>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

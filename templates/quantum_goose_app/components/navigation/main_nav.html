@@ -1,0 +1,245 @@
+<!-- Main Navigation Component -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top main-navigation" id="mainNavigation">
+    <div class="container">
+        <!-- Brand -->
+        <a class="navbar-brand" href="{% url 'welcome' %}">
+            <i class="fas fa-quidditch"></i>
+            <span class="brand-text">Quantum Goose</span>
+        </a>
+        
+        <!-- Mobile toggle button -->
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        
+        <!-- Navigation items -->
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto">
+                {% for item in navigation_items %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url item.url %}" 
+                       title="{{ item.description }}"
+                       {% if active_item == item.name %}aria-current="page"{% endif %}>
+                        <i class="{{ item.icon }}"></i>
+                        <span class="nav-text">{{ item.name }}</span>
+                    </a>
+                </li>
+                {% endfor %}
+            </ul>
+            
+            <!-- Right side navigation -->
+            <ul class="navbar-nav">
+                <!-- Service dropdown -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="servicesDropdown" role="button" 
+                       data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-cube"></i>
+                        Services
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="servicesDropdown">
+                        <li><h6 class="dropdown-header">Quantum Applications</h6></li>
+                        <li><a class="dropdown-item" href="{% url 'quantum_navigator' %}">
+                            <i class="fas fa-compass me-2"></i>Goose Quantum Navigator
+                        </a></li>
+                        <li><a class="dropdown-item" href="{% url 'quantum_cube_universe' %}">
+                            <i class="fas fa-cube me-2"></i>Quantum Cube Universe
+                        </a></li>
+                        <li><a class="dropdown-item" href="{% url 'max_hazoom_chat' %}">
+                            <i class="fas fa-comments me-2"></i>Max Hazoom Chat
+                        </a></li>
+                        <li><a class="dropdown-item" href="{% url 'cube_3d_page' %}">
+                            <i class="fas fa-cube me-2"></i>3D Cube Page
+                        </a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="{% url 'services_index' %}">
+                            <i class="fas fa-th-large me-2"></i>All Services
+                        </a></li>
+                    </ul>
+                </li>
+                
+                <!-- Admin link -->
+                {% if user.is_authenticated %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'admin:index' %}" title="Admin Panel">
+                        <i class="fas fa-cog"></i>
+                        <span class="nav-text">Admin</span>
+                    </a>
+                </li>
+                {% endif %}
+                
+                <!-- Theme toggle -->
+                <li class="nav-item">
+                    <button class="nav-link btn btn-link theme-toggle" id="themeToggle" title="Toggle theme">
+                        <i class="fas fa-moon" id="themeIcon"></i>
+                    </button>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<style>
+.main-navigation {
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
+    z-index: 1030;
+}
+
+.main-navigation.scrolled {
+    background-color: rgba(59, 130, 246, 0.95) !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-brand {
+    font-weight: 700;
+    font-size: 1.25rem;
+}
+
+.brand-text {
+    margin-left: 0.5rem;
+}
+
+.nav-link {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.nav-link::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    transition: left 0.5s ease;
+}
+
+.nav-link:hover::before {
+    left: 100%;
+}
+
+.nav-link:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    transform: translateY(-1px);
+}
+
+.nav-link[aria-current="page"] {
+    background-color: rgba(255, 255, 255, 0.2);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.dropdown-menu {
+    border: none;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+    border-radius: 12px;
+    backdrop-filter: blur(20px);
+    background: rgba(255, 255, 255, 0.95);
+}
+
+.dropdown-item {
+    padding: 0.75rem 1rem;
+    transition: all 0.3s ease;
+    border-radius: 8px;
+    margin: 0.25rem;
+}
+
+.dropdown-item:hover {
+    background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+    color: white;
+    transform: translateX(4px);
+}
+
+.dropdown-header {
+    font-weight: 600;
+    color: #6b7280;
+    border-bottom: 1px solid #e5e7eb;
+    margin-bottom: 0.5rem;
+}
+
+.theme-toggle {
+    border: none;
+    background: none;
+    color: inherit;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.theme-toggle:hover {
+    transform: scale(1.1);
+}
+
+@media (max-width: 991.98px) {
+    .navbar-nav {
+        text-align: center;
+        padding: 1rem 0;
+    }
+    
+    .nav-link {
+        justify-content: center;
+        margin: 0.25rem 0;
+    }
+    
+    .dropdown-menu {
+        text-align: center;
+        margin: 0.5rem 0;
+    }
+}
+
+@media (max-width: 576px) {
+    .brand-text {
+        display: none;
+    }
+    
+    .nav-text {
+        display: none;
+    }
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const navbar = document.getElementById('mainNavigation');
+    const themeToggle = document.getElementById('themeToggle');
+    const themeIcon = document.getElementById('themeIcon');
+    
+    // Navbar scroll effect
+    function handleNavbarScroll() {
+        if (window.scrollY > 50) {
+            navbar.classList.add('scrolled');
+        } else {
+            navbar.classList.remove('scrolled');
+        }
+    }
+    
+    // Theme toggle
+    function toggleTheme() {
+        const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
+        const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+        
+        document.documentElement.setAttribute('data-theme', newTheme);
+        themeIcon.className = newTheme === 'light' ? 'fas fa-moon' : 'fas fa-sun';
+        
+        localStorage.setItem('theme', newTheme);
+    }
+    
+    // Load saved theme
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+    themeIcon.className = savedTheme === 'light' ? 'fas fa-moon' : 'fas fa-sun';
+    
+    // Event listeners
+    window.addEventListener('scroll', handleNavbarScroll);
+    themeToggle.addEventListener('click', toggleTheme);
+    
+    // Initialize navbar state
+    handleNavbarScroll();
+});
+</script>

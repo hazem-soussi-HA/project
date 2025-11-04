@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Quantum Goose Project{% endblock %}</title>
+    
+    <!-- Load Django static template tag -->
+    {% load static %}
+    
+    <!-- Bootstrap CSS for styling -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome for icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <!-- Static CSS -->
+    <link href="{% static 'css/style.css' %}" rel="stylesheet">
+    
+    <!-- Navigation CSS -->
+    <style>
+        /* Base navigation styles */
+        body.navigation-enabled {
+            padding-top: 76px; /* Adjust based on navbar height */
+        }
+        
+        .main-content {
+            min-height: calc(100vh - 200px);
+            transition: margin-left 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+        
+        /* Service Quick Menu */
+        .service-quick-menu {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            z-index: 2000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .service-quick-menu.show {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .service-menu-content {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            max-width: 400px;
+            width: 90%;
+            position: relative;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            transform: scale(0.8);
+            transition: transform 0.3s ease;
+        }
+        
+        .service-quick-menu.show .service-menu-content {
+            transform: scale(1);
+        }
+        
+        .service-menu-content h5 {
+            margin-bottom: 1.5rem;
+            color: #1f2937;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .service-menu-items {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .service-menu-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1rem;
+            color: #374151;
+            text-decoration: none;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            background: rgba(59, 130, 246, 0.05);
+        }
+        
+        .service-menu-item:hover {
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            color: white;
+            transform: translateX(8px);
+            box-shadow: 0 4px 16px rgba(59, 130, 246, 0.3);
+        }
+        
+        .service-menu-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            font-size: 1.25rem;
+            color: #6b7280;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+        
+        .service-menu-close:hover {
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+        }
+        
+        /* Notifications */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 1rem 1.5rem;
+            background: #3b82f6;
+            color: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(20px);
+            transform: translateX(120%);
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            z-index: 3000;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            max-width: 350px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .notification.show {
+            transform: translateX(0);
+        }
+        
+        .notification.success {
+            background: linear-gradient(135deg, #10b981, #059669);
+        }
+        
+        .notification.warning {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+        }
+        
+        .notification.error {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+        }
+        
+        /* Dark theme support */
+        [data-theme="dark"] {
+            --bs-body-bg: #111827;
+            --bs-body-color: #f9fafb;
+        }
+        
+        [data-theme="dark"] .sidebar-navigation {
+            background: rgba(17, 24, 39, 0.95);
+            color: #f9fafb;
+        }
+        
+        [data-theme="dark"] .service-navigation {
+            background: linear-gradient(135deg, rgba(17, 24, 39, 0.8), rgba(31, 41, 55, 0.9));
+        }
+        
+        [data-theme="dark"] .service-card {
+            background: rgba(31, 41, 55, 0.9);
+            border-color: rgba(75, 85, 99, 0.3);
+            color: #f9fafb;
+        }
+        
+        [data-theme="dark"] .service-card:hover {
+            border-color: #3b82f6;
+        }
+        
+        [data-theme="dark"] .modal-content {
+            background: #1f2937;
+            color: #f9fafb;
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            body.navigation-enabled {
+                padding-top: 70px;
+            }
+            
+            .notification {
+                right: 10px;
+                left: 10px;
+                max-width: none;
+                top: 10px;
+            }
+            
+            .service-menu-content {
+                padding: 1.5rem;
+                margin: 1rem;
+            }
+        }
+        
+        /* Quantum mode enhancements */
+        body.quantum-mode .main-navigation {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.95), rgba(139, 92, 246, 0.95)) !important;
+            animation: quantumGlow 4s ease-in-out infinite alternate;
+        }
+        
+        @keyframes quantumGlow {
+            from {
+                box-shadow: 0 4px 20px rgba(59, 130, 246, 0.3);
+            }
+            to {
+                box-shadow: 0 4px 20px rgba(139, 92, 246, 0.5);
+            }
+        }
+        
+        body.quantum-mode .sidebar-navigation {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(139, 92, 246, 0.1));
+            backdrop-filter: blur(30px);
+            border-color: rgba(59, 130, 246, 0.3);
+        }
+        
+        body.quantum-mode .service-card:hover {
+            transform: translateY(-8px) scale(1.02) rotateX(5deg);
+            box-shadow: 0 20px 60px rgba(59, 130, 246, 0.4);
+        }
+        
+        /* Accessibility improvements */
+        .nav-link:focus,
+        .sidebar-nav-item:focus,
+        .service-card:focus {
+            outline: 2px solid #3b82f6;
+            outline-offset: 2px;
+        }
+        
+        /* High contrast mode */
+        @media (prefers-contrast: high) {
+            .navbar {
+                border-bottom: 2px solid #000;
+            }
+            
+            .nav-link {
+                border: 1px solid transparent;
+            }
+            
+            .nav-link:hover {
+                border-color: #000;
+                background: #fff;
+                color: #000;
+            }
+        }
+        
+        /* Reduced motion support */
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
+    
+    <!-- Load template tags -->
+    {% load navigation %}
+    
+    {% block head_extra %}{% endblock %}
+</head>
+<body class="{% if not hide_navigation %}navigation-enabled{% endif %}">
+    <!-- Navigation Components -->
+    {% if not hide_navigation %}
+        {% main_navigation active_item %}
+    {% endif %}
+    
+    <!-- Sidebar Navigation (hidden by default, can be toggled) -->
+    {% if not hide_navigation and show_sidebar %}
+        {% sidebar_navigation current_path %}
+    {% endif %}
+    
+    <!-- Main Content Area -->
+    <div class="main-content" id="mainContent">
+        <!-- Messages -->
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+        
+        <!-- Page Content -->
+        {% block content %}
+            <div class="row">
+                <div class="col-12">
+                    <div class="jumbotron text-center">
+                        <h1 class="display-4">Quantum Goose Project</h1>
+                        <p class="lead">Django Backend with React Frontend Integration</p>
+                        <hr class="my-4">
+                        <p>A powerful combination of Django and React for modern web development</p>
+                        
+                        <!-- Service Navigation Preview -->
+                        {% if show_service_preview %}
+                            {% service_navigation %}
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        {% endblock %}
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-light mt-5 py-4 {% if hide_navigation %}fixed-bottom{% endif %}">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <h5>Quantum Goose Project</h5>
+                    <p class="text-muted">{{ project_description|default:"Django + React Integration" }}</p>
+                </div>
+                <div class="col-md-6 text-end">
+                    <p class="text-muted">
+                        <i class="fas fa-heart text-danger"></i>
+                        Built with Django {{ django_version|default:"latest" }}
+                        {% if is_debug %}<span class="badge bg-warning ms-2">Debug Mode</span>{% endif %}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Static JS -->
+    <script src="{% static 'js/main.js' %}"></script>
+    
+    <!-- Navigation JavaScript -->
+    {% if not hide_navigation %}
+    <script>
+        // Global navigation state
+        window.navigationState = {
+            isSidebarOpen: false,
+            currentTheme: localStorage.getItem('theme') || 'light',
+            shortcutsEnabled: true
+        };
+        
+        // Initialize navigation
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeNavigation();
+            setupKeyboardShortcuts();
+            loadSavedPreferences();
+        });
+        
+        function initializeNavigation() {
+            // Theme initialization
+            applyTheme(window.navigationState.currentTheme);
+            
+            // Navigation scroll effects
+            let lastScrollTop = 0;
+            const navbar = document.querySelector('.main-navigation');
+            
+            window.addEventListener('scroll', function() {
+                let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+                
+                if (navbar) {
+                    if (scrollTop > lastScrollTop && scrollTop > 100) {
+                        // Scrolling down
+                        navbar.style.transform = 'translateY(-100%)';
+                    } else {
+                        // Scrolling up
+                        navbar.style.transform = 'translateY(0)';
+                    }
+                }
+                
+                lastScrollTop = scrollTop;
+            });
+        }
+        
+        function setupKeyboardShortcuts() {
+            if (!window.navigationState.shortcutsEnabled) return;
+            
+            document.addEventListener('keydown', function(e) {
+                // Only handle shortcuts when not typing in an input
+                if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+                
+                if (e.ctrlKey || e.metaKey) {
+                    switch(e.key) {
+                        case 'h':
+                            e.preventDefault();
+                            window.location.href = '{% url "welcome" %}';
+                            break;
+                        case 'r':
+                            e.preventDefault();
+                            window.location.href = '{% url "quantum_goose_app:react_integration" %}';
+                            break;
+                        case 's':
+                            e.preventDefault();
+                            showServiceMenu();
+                            break;
+                        case '/':
+                            e.preventDefault();
+                            toggleSidebar();
+                            break;
+                    }
+                } else {
+                    switch(e.key) {
+                        case 'Escape':
+                            closeAllModals();
+                            break;
+                        case 'n':
+                        case 'N':
+                            toggleNavigation();
+                            break;
+                    }
+                }
+            });
+        }
+        
+        function loadSavedPreferences() {
+            // Load sidebar state
+            const sidebarState = localStorage.getItem('sidebar-collapsed');
+            if (sidebarState === 'true') {
+                // Don't auto-open sidebar on load, just store the preference
+            }
+            
+            // Load navigation preferences
+            const navPrefs = localStorage.getItem('navigation-prefs');
+            if (navPrefs) {
+                try {
+                    const prefs = JSON.parse(navPrefs);
+                    window.navigationState = { ...window.navigationState, ...prefs };
+                } catch (e) {
+                    console.warn('Failed to parse navigation preferences');
+                }
+            }
+        }
+        
+        function applyTheme(theme) {
+            document.documentElement.setAttribute('data-theme', theme);
+            window.navigationState.currentTheme = theme;
+            
+            // Update theme icon
+            const themeIcon = document.getElementById('themeIcon');
+            if (themeIcon) {
+                themeIcon.className = theme === 'light' ? 'fas fa-moon' : 'fas fa-sun';
+            }
+            
+            localStorage.setItem('theme', theme);
+        }
+        
+        function toggleTheme() {
+            const currentTheme = window.navigationState.currentTheme;
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            applyTheme(newTheme);
+            
+            // Add visual feedback
+            showNotification(`Theme switched to ${newTheme}`, 'info');
+        }
+        
+        function toggleNavigation() {
+            const navbar = document.querySelector('.main-navigation');
+            if (navbar) {
+                navbar.classList.toggle('collapsed');
+                showNotification('Navigation toggled', 'info');
+            }
+        }
+        
+        function toggleSidebar() {
+            if (typeof window.toggleSidebar === 'function') {
+                window.toggleSidebar();
+            } else {
+                showNotification('Sidebar not available on this page', 'warning');
+            }
+        }
+        
+        function showServiceMenu() {
+            // Create service menu if it doesn't exist
+            let serviceMenu = document.getElementById('serviceQuickMenu');
+            if (!serviceMenu) {
+                serviceMenu = createServiceMenu();
+                document.body.appendChild(serviceMenu);
+            }
+            
+            serviceMenu.classList.add('show');
+        }
+        
+        function createServiceMenu() {
+            const menu = document.createElement('div');
+            menu.id = 'serviceQuickMenu';
+            menu.className = 'service-quick-menu';
+            menu.innerHTML = `
+                <div class="service-menu-content">
+                    <h5><i class="fas fa-cube"></i> Quick Services</h5>
+                    <div class="service-menu-items">
+                        <a href="{% url 'quantum_navigator' %}" class="service-menu-item">
+                            <i class="fas fa-compass"></i> Goose Navigator
+                        </a>
+                        <a href="{% url 'quantum_cube_universe' %}" class="service-menu-item">
+                            <i class="fas fa-cube"></i> Quantum Cube
+                        </a>
+                        <a href="{% url 'max_hazoom_chat' %}" class="service-menu-item">
+                            <i class="fas fa-comments"></i> Max Hazoom Chat
+                        </a>
+                        <a href="{% url 'cube_3d_page' %}" class="service-menu-item">
+                            <i class="fas fa-cube"></i> 3D Cube Page
+                        </a>
+                        <a href="{% url 'services_index' %}" class="service-menu-item">
+                            <i class="fas fa-th-large"></i> All Services
+                        </a>
+                    </div>
+                    <button class="service-menu-close" onclick="this.closest('#serviceQuickMenu').classList.remove('show')">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            `;
+            
+            // Add click outside to close
+            menu.addEventListener('click', function(e) {
+                if (e.target === menu) {
+                    menu.classList.remove('show');
+                }
+            });
+            
+            return menu;
+        }
+        
+        function closeAllModals() {
+            // Close service menu
+            const serviceMenu = document.getElementById('serviceQuickMenu');
+            if (serviceMenu) serviceMenu.classList.remove('show');
+            
+            // Close sidebar if open
+            if (typeof window.closeSidebar === 'function') {
+                window.closeSidebar();
+            }
+            
+            // Close other modals
+            const modals = document.querySelectorAll('.modal, .dropdown-menu.show');
+            modals.forEach(modal => {
+                if (modal.classList.contains('dropdown-menu')) {
+                    // Bootstrap dropdowns need special handling
+                    const dropdown = bootstrap.Dropdown.getInstance(modal.previousElementSibling);
+                    if (dropdown) dropdown.hide();
+                } else {
+                    modal.style.display = 'none';
+                }
+            });
+        }
+        
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.innerHTML = `
+                <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'warning' ? 'exclamation-triangle' : 'info-circle'}"></i>
+                ${message}
+            `;
+            
+            document.body.appendChild(notification);
+            
+            // Animate in
+            setTimeout(() => notification.classList.add('show'), 100);
+            
+            // Auto remove
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
+        }
+        
+        // Make functions globally available
+        window.toggleTheme = toggleTheme;
+        window.toggleNavigation = toggleNavigation;
+        window.showServiceMenu = showServiceMenu;
+    </script>
+    {% endif %}
+    
+    {% block scripts %}{% endblock %}
+</body>
+</html>

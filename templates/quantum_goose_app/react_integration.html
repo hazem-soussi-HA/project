@@ -1,0 +1,405 @@
+{% extends 'quantum_goose_app/base.html' %}
+{% load static %}
+
+{% block title %}React App Integration - {{ block.super }}{% endblock %}
+
+{% block head_extra %}
+<style>
+.react-integration-container {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 10px;
+    color: white;
+    padding: 20px;
+    margin: 20px 0;
+}
+
+.code-block {
+    background: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 5px;
+    padding: 15px;
+    margin: 10px 0;
+    font-family: 'Courier New', monospace;
+    font-size: 14px;
+    overflow-x: auto;
+}
+
+.file-structure {
+    background: #2d3748;
+    color: #e2e8f0;
+    border-radius: 5px;
+    padding: 15px;
+    margin: 10px 0;
+    font-family: 'Courier New', monospace;
+}
+
+.file-structure .folder {
+    color: #63b3ed;
+}
+
+.file-structure .file {
+    color: #68d391;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="react-integration-container">
+            <h1 class="display-4">
+                <i class="fab fa-react"></i>
+                React App Integration
+            </h1>
+            <p class="lead">Django-React integration configuration and status</p>
+        </div>
+    </div>
+</div>
+
+<!-- Integration Status -->
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h4><i class="fas fa-heartbeat"></i> Integration Status</h4>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6>Django Configuration:</h6>
+                        <ul>
+                            <li><strong>Debug Mode:</strong> 
+                                {% if react_app_config.debug %}
+                                    <span class="badge bg-success">Enabled</span>
+                                {% else %}
+                                    <span class="badge bg-secondary">Disabled</span>
+                                {% endif %}
+                            </li>
+                            <li><strong>Static URL:</strong> <code>{{ react_app_config.static_url }}</code></li>
+                            <li><strong>API Base URL:</strong> <code>{{ react_app_config.api_base_url }}</code></li>
+                            <li><strong>React Base URL:</strong> <code>{{ react_app_config.base_url }}</code></li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <h6>File System Status:</h6>
+                        <ul>
+                            <li><strong>React App Path:</strong>
+                                <div class="file-structure">{{ quantum_goose_app_path }}</div>
+                            </li>
+                            <li><strong>React Dist Path:</strong>
+                                <div class="file-structure">{{ react_dist_path }}</div>
+                            </li>
+                            <li><strong>Dist Exists:</strong>
+                                {% if quantum_goose_app_path %}
+                                    <span class="badge bg-success">
+                                        <i class="fas fa-check"></i> Found
+                                    </span>
+                                {% else %}
+                                    <span class="badge bg-danger">
+                                        <i class="fas fa-times"></i> Not Found
+                                    </span>
+                                {% endif %}
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Integration Methods -->
+<div class="row mt-4">
+    <div class="col-12">
+        <h3><i class="fas fa-cogs"></i> Integration Methods</h3>
+        
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header bg-primary text-white">
+                        <h5><i class="fas fa-server"></i> Method 1: Proxy Requests</h5>
+                    </div>
+                    <div class="card-body">
+                        <p>Django serves as a proxy for React app requests:</p>
+                        <div class="code-block">
+# Django URLs
+path('react/', views.react_app_integration, name='react_integration'),
+path('react/static/<path:filename>', views.serve_react_static, name='serve_react_static'),</div>
+                        
+                        <h6>React App Configuration:</h6>
+                        <div class="code-block">
+// React development
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:8000';
+
+// Production - use relative URLs
+const API_BASE_URL = '/quantum-goose-app/api/';</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header bg-info text-white">
+                        <h5><i class="fas fa-link"></i> Method 2: Direct API</h5>
+                    </div>
+                    <div class="card-body">
+                        <p>React app makes direct API calls to Django:</p>
+                        <div class="code-block">
+// React fetch example
+const response = await fetch('/quantum-goose-app/api/');
+const data = await response.json();
+
+// POST example
+const response = await fetch('/quantum-goose-app/api/', {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(data)
+});</div>
+                        
+                        <h6>Django API Response:</h6>
+                        <div class="code-block">
+{
+    "status": "ok",
+    "message": "Quantum Goose API is running",
+    "endpoints": { ... },
+    "django_settings": { ... }
+}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- File Structure -->
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h4><i class="fas fa-folder-tree"></i> Project File Structure</h4>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6>Django Backend Structure:</h6>
+                        <div class="file-structure">
+quantum_goose_project/
+├── settings.py
+├── urls.py
+├── wsgi.py
+└── asgi.py
+
+quantum_goose_app/
+├── views.py
+├── urls.py
+└── static/
+    └── quantum_goose_app/
+
+templates/
+└── quantum_goose_app/
+    ├── base.html
+    ├── welcome.html
+    └── react_integration.html
+
+static/
+├── css/
+│   └── style.css
+├── js/
+│   └── main.js
+└── images/</div>
+                    </div>
+                    <div class="col-md-6">
+                        <h6>React Frontend Structure:</h6>
+                        <div class="file-structure">
+quantum-goose-app/
+├── src/
+│   ├── components/
+│   ├── pages/
+│   ├── services/
+│   └── App.js
+├── public/
+│   └── index.html
+├── dist/ (build output)
+├── package.json
+└── vite.config.js</div>
+                        
+                        <h6>Integration URLs:</h6>
+                        <div class="code-block">
+GET / - Django welcome page
+GET /react/ - React integration page
+GET /react/static/ - React static files
+GET /quantum-goose-app/api/ - API info
+POST /quantum-goose-app/api/ - API endpoints
+GET /quantum-goose-app/health/ - Health check</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Development Workflow -->
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h4><i class="fas fa-code"></i> Development Workflow</h4>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        <h6>1. Development Setup:</h6>
+                        <div class="code-block"># Terminal 1 - Django
+cd /d/project
+python manage.py runserver
+
+# Terminal 2 - React
+cd /d/project/quantum-goose-app
+npm run dev</div>
+                    </div>
+                    <div class="col-md-4">
+                        <h6>2. API Testing:</h6>
+                        <div class="code-block"># Health check
+curl http://localhost:8000/quantum-goose-app/health/
+
+# API info
+curl http://localhost:8000/quantum-goose-app/api/
+
+# POST test
+curl -X POST http://localhost:8000/quantum-goose-app/api/ \
+  -H "Content-Type: application/json" \
+  -d '{"test": "data"}'</div>
+                    </div>
+                    <div class="col-md-4">
+                        <h6>3. Production Build:</h6>
+                        <div class="code-block"># Build React app
+cd /d/project/quantum-goose-app
+npm run build
+
+# Collect Django static files
+cd /d/project
+python manage.py collectstatic --noinput</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Configuration Examples -->
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h4><i class="fas fa-wrench"></i> Configuration Examples</h4>
+            </div>
+            <div class="card-body">
+                <ul class="nav nav-tabs" id="configTabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="react-config-tab" data-bs-toggle="tab" data-bs-target="#react-config" type="button" role="tab">
+                            React Config
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="vite-config-tab" data-bs-toggle="tab" data-bs-target="#vite-config" type="button" role="tab">
+                            Vite Config
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="django-settings-tab" data-bs-toggle="tab" data-bs-target="#django-settings" type="button" role="tab">
+                            Django Settings
+                        </button>
+                    </li>
+                </ul>
+                
+                <div class="tab-content" id="configTabsContent">
+                    <div class="tab-pane fade show active" id="react-config" role="tabpanel">
+                        <div class="code-block">
+// src/services/api.js
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || '/quantum-goose-app/api/';
+
+export const api = {
+    async get(endpoint) {
+        const response = await fetch(`${API_BASE_URL}${endpoint}`);
+        return response.json();
+    },
+    
+    async post(endpoint, data) {
+        const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data)
+        });
+        return response.json();
+    },
+    
+    health() {
+        return this.get('health/');
+    }
+};</div>
+                    </div>
+                    
+                    <div class="tab-pane fade" id="vite-config" role="tabpanel">
+                        <div class="code-block">
+// vite.config.js
+import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
+
+export default defineConfig({
+    plugins: [react()],
+    server: {
+        port: 3000,
+        proxy: {
+            '/quantum-goose-app': {
+                target: 'http://localhost:8000',
+                changeOrigin: true,
+            },
+            '/react': {
+                target: 'http://localhost:8000',
+                changeOrigin: true,
+            }
+        }
+    },
+    build: {
+        outDir: 'dist',
+        sourcemap: true
+    }
+});</div>
+                    </div>
+                    
+                    <div class="tab-pane fade" id="django-settings" role="tabpanel">
+                        <div class="code-block">
+# Django settings.py - Static files configuration
+STATIC_URL = '/static/'
+STATICFILES_DIRS = [
+    BASE_DIR / 'static',
+    BASE_DIR / 'quantum_goose_app' / 'static',
+]
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+# Templates configuration
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [BASE_DIR / 'templates'],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+            ],
+        },
+    },
+]</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

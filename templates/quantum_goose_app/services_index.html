@@ -1,0 +1,197 @@
+{% extends 'quantum_goose_app/base.html' %}
+{% load navigation %}
+
+{% block title %}Quantum Services - {{ block.super }}{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <!-- Services Header -->
+    <div class="text-center mb-5">
+        <h1 class="display-3 fw-bold text-gradient mb-4">
+            <i class="fas fa-cube me-3"></i>
+            Quantum Services
+        </h1>
+        <p class="lead text-muted max-width-600 mx-auto">
+            Explore our collection of quantum-based applications and experiences. 
+            Each service offers a unique window into the intersection of consciousness and technology.
+        </p>
+    </div>
+
+    <!-- Services Grid -->
+    <div class="row g-4 mb-5">
+        {% for service in services %}
+        <div class="col-lg-6 col-md-12">
+            <div class="card service-card h-100 border-0 shadow-lg">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-start mb-3">
+                        <div class="service-icon me-3">
+                            <i class="{{ service.icon }} fa-2x"></i>
+                        </div>
+                        <div class="flex-grow-1">
+                            <h4 class="card-title fw-bold mb-2">{{ service.name }}</h4>
+                            <p class="card-text text-muted">{{ service.description }}</p>
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex justify-content-between align-items-center mt-auto">
+                        <div class="service-features">
+                            <span class="badge bg-primary-subtle text-primary me-2">
+                                <i class="fas fa-star"></i> Quantum
+                            </span>
+                            <span class="badge bg-success-subtle text-success">
+                                <i class="fas fa-bolt"></i> Interactive
+                            </span>
+                        </div>
+                        <a href="{% url service.url %}" class="btn btn-primary">
+                            Launch <i class="fas fa-arrow-right ms-2"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="row">
+        <div class="col-12">
+            <div class="bg-gradient rounded-4 p-4 text-white text-center">
+                <h3 class="mb-3">
+                    <i class="fas fa-rocket me-2"></i>
+                    Ready to Explore?
+                </h3>
+                <p class="mb-4">Choose any quantum service above to begin your journey into consciousness-driven technology.</p>
+                <div class="d-flex justify-content-center gap-3 flex-wrap">
+                    <a href="{% url 'quantum_goose_app:react_integration' %}" class="btn btn-light">
+                        <i class="fab fa-react me-2"></i>
+                        React App
+                    </a>
+                    <a href="{% url 'quantum_goose_app:api_integration' %}" class="btn btn-outline-light">
+                        <i class="fas fa-code me-2"></i>
+                        API Documentation
+                    </a>
+                    <a href="{% url 'welcome' %}" class="btn btn-outline-light">
+                        <i class="fas fa-home me-2"></i>
+                        Back to Home
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.service-card {
+    transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    border-radius: 20px !important;
+    overflow: hidden;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.95));
+    backdrop-filter: blur(20px);
+}
+
+.service-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 20px 60px rgba(59, 130, 246, 0.3) !important;
+}
+
+.service-icon {
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    box-shadow: 0 8px 25px rgba(59, 130, 246, 0.3);
+    flex-shrink: 0;
+}
+
+.service-card .btn-primary {
+    background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+    border: none;
+    border-radius: 12px;
+    font-weight: 600;
+    padding: 0.75rem 1.5rem;
+    transition: all 0.3s ease;
+}
+
+.service-card .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
+    background: linear-gradient(135deg, #2563eb, #7c3aed);
+}
+
+.text-gradient {
+    background: linear-gradient(135deg, #3b82f6, #8b5cf6, #10b981);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.bg-gradient {
+    background: linear-gradient(135deg, #3b82f6, #8b5cf6) !important;
+}
+
+.max-width-600 {
+    max-width: 600px;
+}
+
+@media (max-width: 768px) {
+    .service-card {
+        margin-bottom: 1rem;
+    }
+    
+    .display-3 {
+        font-size: 2.5rem;
+    }
+    
+    .service-icon {
+        width: 50px;
+        height: 50px;
+    }
+    
+    .service-icon i {
+        font-size: 1.5rem !important;
+    }
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Add staggered animation to service cards
+    const serviceCards = document.querySelectorAll('.service-card');
+    serviceCards.forEach((card, index) => {
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(30px)';
+        card.style.transition = 'all 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55)';
+        
+        setTimeout(() => {
+            card.style.opacity = '1';
+            card.style.transform = 'translateY(0)';
+        }, index * 150);
+    });
+    
+    // Add click animation
+    serviceCards.forEach(card => {
+        card.addEventListener('click', function(e) {
+            if (!e.target.closest('.btn')) {
+                const launchBtn = this.querySelector('.btn-primary');
+                if (launchBtn) {
+                    launchBtn.click();
+                }
+            }
+        });
+        
+        // Add hover effects
+        card.addEventListener('mouseenter', function() {
+            this.style.zIndex = '10';
+        });
+        
+        card.addEventListener('mouseleave', function() {
+            this.style.zIndex = '';
+        });
+    });
+});
+</script>
+{% endblock %}

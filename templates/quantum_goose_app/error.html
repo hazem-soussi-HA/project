@@ -1,0 +1,168 @@
+{% extends 'quantum_goose_app/base.html' %}
+{% load navigation %}
+
+{% block title %}Error {{ error_code }} - {{ block.super }}{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="text-center">
+                <!-- Error Icon -->
+                <div class="error-icon mb-4">
+                    <i class="fas fa-exclamation-triangle fa-5x text-warning"></i>
+                </div>
+                
+                <!-- Error Code -->
+                <h1 class="display-1 fw-bold text-muted mb-3">{{ error_code }}</h1>
+                
+                <!-- Error Message -->
+                <h2 class="h3 mb-4">{{ error_message }}</h2>
+                
+                <!-- Error Description -->
+                <p class="lead text-muted mb-5">{{ error_description }}</p>
+                
+                <!-- Action Buttons -->
+                <div class="d-flex justify-content-center gap-3 flex-wrap mb-5">
+                    <a href="{% url 'welcome' %}" class="btn btn-primary btn-lg">
+                        <i class="fas fa-home me-2"></i>
+                        Go Home
+                    </a>
+                    <a href="{% url 'quantum_goose_app:services_index' %}" class="btn btn-outline-primary btn-lg">
+                        <i class="fas fa-cube me-2"></i>
+                        View Services
+                    </a>
+                    <button onclick="history.back()" class="btn btn-outline-secondary btn-lg">
+                        <i class="fas fa-arrow-left me-2"></i>
+                        Go Back
+                    </button>
+                </div>
+                
+                <!-- Quantum Troubleshooting -->
+                <div class="row">
+                    <div class="col-md-8 mx-auto">
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-body p-4">
+                                <h5 class="card-title">
+                                    <i class="fas fa-quidditch me-2"></i>
+                                    Quantum Troubleshooting
+                                </h5>
+                                <p class="card-text text-muted mb-3">
+                                    If this error persists, the quantum field may be experiencing interference.
+                                </p>
+                                <div class="d-flex justify-content-center gap-2">
+                                    <button onclick="checkQuantumField()" class="btn btn-sm btn-outline-info">
+                                        <i class="fas fa-atom me-1"></i>
+                                        Check Field Status
+                                    </button>
+                                    <a href="{% url 'quantum_goose_app:health_check' %}" class="btn btn-sm btn-outline-success">
+                                        <i class="fas fa-heartbeat me-1"></i>
+                                        Health Check
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.error-icon {
+    animation: errorPulse 2s ease-in-out infinite;
+}
+
+@keyframes errorPulse {
+    0%, 100% {
+        transform: scale(1);
+        opacity: 0.8;
+    }
+    50% {
+        transform: scale(1.05);
+        opacity: 1;
+    }
+}
+
+.btn-lg {
+    border-radius: 12px;
+    padding: 0.75rem 2rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.btn-lg:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+}
+
+.card {
+    border-radius: 16px;
+}
+
+.card-title {
+    color: #3b82f6;
+}
+
+@media (max-width: 768px) {
+    .display-1 {
+        font-size: 4rem;
+    }
+    
+    .btn-lg {
+        width: 100%;
+        margin-bottom: 1rem;
+    }
+    
+    .d-flex.gap-3 {
+        flex-direction: column;
+        gap: 1rem !important;
+    }
+}
+</style>
+
+<script>
+function checkQuantumField() {
+    // Simulate quantum field check
+    showNotification('Checking quantum field coherence...', 'info');
+    
+    setTimeout(() => {
+        const fieldStatus = Math.random() > 0.3 ? 'stable' : 'unstable';
+        
+        if (fieldStatus === 'stable') {
+            showNotification('Quantum field is stable and ready for operation', 'success');
+        } else {
+            showNotification('Quantum field experiencing temporary fluctuations', 'warning');
+        }
+    }, 2000);
+}
+
+function showNotification(message, type = 'info') {
+    const notification = document.createElement('div');
+    notification.className = `notification ${type}`;
+    notification.innerHTML = `
+        <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'warning' ? 'exclamation-triangle' : 'info-circle'}"></i>
+        ${message}
+    `;
+    
+    document.body.appendChild(notification);
+    
+    setTimeout(() => notification.classList.add('show'), 100);
+    
+    setTimeout(() => {
+        notification.classList.remove('show');
+        setTimeout(() => notification.remove(), 300);
+    }, 3000);
+}
+
+// Auto refresh on server errors (5xx)
+if ('{{ error_code }}'.startsWith('5')) {
+    setTimeout(() => {
+        if (confirm('Server error detected. Would you like to refresh the page?')) {
+            window.location.reload();
+        }
+    }, 10000);
+}
+</script>
+{% endblock %}

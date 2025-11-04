@@ -1,0 +1,66 @@
+/* Quantum Goose Main Styles */
+
+:root {
+    --quantum-primary: #667eea;
+    --quantum-secondary: #764ba2;
+    --quantum-energy: #f093fb;
+    --quantum-accent: #4ecdc4;
+    --quantum-life: #43e97b;
+    --quantum-void: #38f9d7;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    min-height: 100vh;
+}
+
+.quantum-navbar {
+    background: linear-gradient(90deg, var(--quantum-primary), var(--quantum-secondary));
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(10px);
+}
+
+.quantum-card {
+    background: white;
+    border-radius: 20px;
+    padding: 2rem;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.quantum-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+}
+
+.quantum-gradient {
+    background: linear-gradient(135deg, var(--quantum-energy), var(--quantum-accent));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.quantum-btn {
+    background: linear-gradient(45deg, var(--quantum-primary), var(--quantum-secondary));
+    border: none;
+    border-radius: 25px;
+    padding: 12px 30px;
+    color: white;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.quantum-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+    color: white;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .quantum-card {
+        margin: 1rem;
+        padding: 1.5rem;
+    }
+}
