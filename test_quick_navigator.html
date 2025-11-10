@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Quick Model Navigator Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .test-section { margin: 20px 0; padding: 15px; border: 1px solid #ccc; }
+        .success { color: green; }
+        .error { color: red; }
+        button { padding: 10px 15px; margin: 5px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <h1>Quick Model Navigator Test</h1>
+    
+    <div class="test-section">
+        <h2>1. API Test</h2>
+        <button onclick="testAPI()">Test Models API</button>
+        <div id="api-result"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>2. Navigation Test</h2>
+        <button onclick="testNavigation()">Open Quick Navigator</button>
+        <button onclick="testHAZoomWithModel()">Open HAZoom LLM with Model</button>
+        <div id="nav-result"></div>
+    </div>
+
+    <script>
+        async function testAPI() {
+            const resultDiv = document.getElementById('api-result');
+            try {
+                const response = await fetch('/quantum-goose-app/api/models/legacy/');
+                const data = await response.json();
+                
+                if (data.status === 'success') {
+                    resultDiv.innerHTML = `<div class="success">✅ API Working! Found ${data.count} models. Current: ${data.current_model}</div>`;
+                    resultDiv.innerHTML += `<pre>${JSON.stringify(data.models.slice(0, 3), null, 2)}</pre>`;
+                } else {
+                    resultDiv.innerHTML = `<div class="error">❌ API Error: ${data}</div>`;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `<div class="error">❌ Network Error: ${error.message}</div>`;
+            }
+        }
+        
+        function testNavigation() {
+            const resultDiv = document.getElementById('nav-result');
+            resultDiv.innerHTML = `<div class="success">✅ Opening Quick Model Navigator...</div>`;
+            window.open('/quick-navigator', '_blank');
+        }
+        
+        function testHAZoomWithModel() {
+            const resultDiv = document.getElementById('nav-result');
+            resultDiv.innerHTML = `<div class="success">✅ Opening HAZoom LLM with phi model...</div>`;
+            window.open('/hazoom-llm?model=phi:latest', '_blank');
+        }
+    </script>
+</body>
+</html>

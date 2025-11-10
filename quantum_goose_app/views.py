@@ -1,14 +1,22 @@
 """
 Views for quantum_goose_app
+
+Copyright (c) 2024 Hazem Soussi, Cloud Engineer. All rights reserved.
+HAZoom SGI LLM - Super Intelligence AI System
 """
 import os
 import json
-from django.http import JsonResponse, HttpResponse, FileResponse, Http404
+import logging
+from django.http import JsonResponse, HttpResponse, FileResponse, Http404, StreamingHttpResponse
 from django.shortcuts import render
 from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
 from django.core.files.storage import default_storage
+from django.urls import reverse
+from .camera_service import frame_generator, camera_ready, CameraUnavailableError, generate_placeholder_frame
+
+logger = logging.getLogger(__name__)
 
 
 def welcome(request):
@@ -133,9 +141,10 @@ def health_check(request):
     """
     Health check endpoint
     """
+    import django
     health_status = {
         'status': 'healthy',
-        'django_version': settings.DJANGO_VERSION,
+        'django_version': django.get_version(),
         'debug_mode': settings.DEBUG,
         'static_url': settings.STATIC_URL,
         'media_url': settings.MEDIA_URL,
@@ -151,35 +160,89 @@ def services_index(request):
     """
     Services index page
     """
+    services = [
+        {
+            'name': 'Max Hazoom Chat',
+            'url': 'quantum_goose_app:max_hazoom_chat',
+            'icon': 'fas fa-comments',
+            'description': 'Interactive chat with quantum consciousness features',
+            'priority_label': 'Priorité Haute',
+            'priority_rank': 1
+        },
+        {
+            'name': 'Goose Quantum Navigator',
+            'url': 'quantum_goose_app:quantum_navigator',
+            'icon': 'fas fa-compass',
+            'description': 'Life Quantum Integration - Interactive navigation system',
+            'priority_rank': 2
+        },
+        {
+            'name': 'Quantum Cube Universe',
+            'url': 'quantum_goose_app:quantum_cube_universe',
+            'icon': 'fas fa-cube',
+            'description': '3D quantum cube with visualization and interaction',
+            'priority_rank': 3
+        },
+        {
+            'name': '3D Cube Page',
+            'url': 'quantum_goose_app:cube_3d_page',
+            'icon': 'fas fa-cube',
+            'description': 'Advanced 3D cube with quantum mechanics simulation',
+            'priority_rank': 4
+        },
+        {
+            'name': 'Quantum Camera Stream',
+            'url': 'quantum_goose_app:camera_service',
+            'icon': 'fas fa-video',
+            'description': 'Live MJPEG stream from the system camera',
+            'priority_rank': 5
+        }
+    ]
+
+    services_sorted = sorted(services, key=lambda svc: svc.get('priority_rank', 99))
+
     context = {
-        'services': [
-            {
-                'name': 'Goose Quantum Navigator',
-                'url': 'quantum_navigator',
-                'icon': 'fas fa-compass',
-                'description': 'Life Quantum Integration - Interactive navigation system'
-            },
-            {
-                'name': 'Quantum Cube Universe',
-                'url': 'quantum_cube_universe',
-                'icon': 'fas fa-cube',
-                'description': '3D quantum cube with visualization and interaction'
-            },
-            {
-                'name': 'Max Hazoom Chat',
-                'url': 'max_hazoom_chat',
-                'icon': 'fas fa-comments',
-                'description': 'Interactive chat with quantum consciousness features'
-            },
-            {
-                'name': '3D Cube Page',
-                'url': 'cube_3d_page',
-                'icon': 'fas fa-cube',
-                'description': 'Advanced 3D cube with quantum mechanics simulation'
-            }
-        ]
+        'services': services_sorted,
+        'camera_available': camera_ready()
     }
     return render(request, 'quantum_goose_app/services_index.html', context)
+
+
+@require_http_methods(["GET"])
+def camera_service(request):
+    context = {
+        'camera_available': camera_ready(),
+        'stream_url': reverse('quantum_goose_app:camera_stream')
+    }
+    return render(request, 'quantum_goose_app/camera_service.html', context)
+
+
+@require_http_methods(["GET"])
+def camera_stream(request):
+    """Stream camera feed with error handling."""
+    try:
+        if not camera_ready():
+            # Return a placeholder image instead of error
+            placeholder = generate_placeholder_frame()
+            if placeholder:
+                # Check if it's SVG or JPEG
+                if placeholder.startswith(b'<?xml'):
+                    return HttpResponse(placeholder, content_type='image/svg+xml')
+                else:
+                    return HttpResponse(placeholder, content_type='image/jpeg')
+            return HttpResponse(b'Camera unavailable', content_type='text/plain', status=503)
+        
+        response = StreamingHttpResponse(frame_generator(), content_type='multipart/x-mixed-replace; boundary=frame')
+        response['Cache-Control'] = 'no-cache, no-store, must-revalidate'
+        response['Pragma'] = 'no-cache'
+        response['Expires'] = '0'
+        return response
+    except CameraUnavailableError as e:
+        logger.error(f"Camera stream error: {e}")
+        return HttpResponse(b'Camera temporarily unavailable', content_type='text/plain', status=503)
+    except Exception as e:
+        logger.error(f"Unexpected camera stream error: {e}")
+        return HttpResponse(b'Camera service error', content_type='text/plain', status=500)
 
 
 def quantum_navigator(request):
@@ -310,7 +373,7 @@ def serve_html_file(request, filename, title):
 </html>"""
         
         # Return the wrapped content
-        return HttpResponse(django_wrapper)
+        return HttpResponse(django_wrapper.encode('utf-8'), content_type='text/html')
         
     except IOError as e:
         return render(request, 'quantum_goose_app/error.html', {

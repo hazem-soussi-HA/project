@@ -1,101 +1,161 @@
+/* ========================================
+   HAZoom Application Styles
+   Unified Quantum Theme
+   ======================================== */
+
+/* Import Global Quantum Theme */
+@import './styles/quantum-theme.css';
+
+/* App Root Container */
 .App {
   min-height: 100vh;
   position: relative;
-}
-
-.main-content {
-  transition: all 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-}
-
-.sidebar-collapsed .dashboard {
-  margin-left: 0;
-}
-
-.sidebar-collapsed .quantum-app-container,
-.sidebar-collapsed .app-container,
-.sidebar-collapsed .quantum-universe-container,
-.sidebar-collapsed .legacy-cube-container {
-  margin-left: 0;
-}
-
-/* Enhanced main content styling */
-.App {
   display: flex;
-  min-height: 100vh;
-  background: linear-gradient(135deg, #1e1b4b 0%, #312e81 50%, #1e1b4b 100%);
-  position: relative;
+  flex-direction: column;
 }
 
+/* Apply Quantum Background to App */
+.App {
+  background: linear-gradient(135deg, 
+    var(--quantum-darker) 0%,
+    var(--quantum-dark) 25%,
+    var(--quantum-deep) 50%,
+    var(--quantum-dark) 75%,
+    var(--quantum-darker) 100%
+  );
+}
+
+/* Quantum Background Effects */
 .App::before {
+  content: '';
+  position: fixed;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: 
+    radial-gradient(circle at 20% 80%, var(--quantum-primary) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, var(--quantum-accent) 0%, transparent 50%),
+    radial-gradient(circle at 40% 40%, var(--quantum-consciousness) 0%, transparent 50%);
+  opacity: 0.15;
+  animation: quantumFlow 20s ease-in-out infinite;
+  pointer-events: none;
+  z-index: var(--z-background);
+}
+
+.App::after {
   content: '';
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: 
-    radial-gradient(circle at 20% 80%, rgba(59, 130, 246, 0.05) 0%, transparent 50%),
-    radial-gradient(circle at 80% 20%, rgba(139, 92, 246, 0.05) 0%, transparent 50%),
-    radial-gradient(circle at 40% 40%, rgba(16, 185, 129, 0.02) 0%, transparent 50%);
+  background-image: 
+    radial-gradient(2px 2px at 20% 30%, white, transparent),
+    radial-gradient(2px 2px at 60% 70%, var(--quantum-accent), transparent),
+    radial-gradient(1px 1px at 50% 50%, var(--quantum-life), transparent),
+    radial-gradient(1px 1px at 80% 10%, var(--quantum-energy), transparent);
+  background-size: 200% 200%;
+  animation: particleFloat 30s ease infinite;
+  opacity: 0.4;
   pointer-events: none;
-  z-index: -1;
+  z-index: var(--z-background);
 }
 
+/* Main Content Area */
 .main-content {
   flex: 1;
   display: flex;
   flex-direction: column;
-  transition: all 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  transition: all var(--transition-slow);
+  position: relative;
+  z-index: var(--z-base);
+  min-height: 100vh;
   padding-bottom: 100px; /* Space for MusicPlayer */
 }
 
-/* Smooth transitions for all components when sidebar collapses */
-.App.sidebar-collapsed .dashboard,
-.App.sidebar-collapsed .quantum-app-container,
-.App.sidebar-collapsed .app-container,
-.App.sidebar-collapsed .quantum-universe-container,
-.App.sidebar-collapsed .legacy-cube-container {
+/* Sidebar Collapsed States */
+.sidebar-collapsed .main-content {
   margin-left: 0;
-  transition: all 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
 }
 
-/* Responsive design for main content */
-@media (max-width: 768px) {
-  .main-content {
-    margin-left: 0 !important;
-  }
-  
-  .App.sidebar-collapsed .dashboard,
-  .App.sidebar-collapsed .quantum-app-container,
-  .App.sidebar-collapsed .app-container,
-  .App.sidebar-collapsed .quantum-universe-container,
-  .App.sidebar-collapsed .legacy-cube-container {
-    margin-left: 0 !important;
-  }
+.sidebar-collapsed .dashboard,
+.sidebar-collapsed .quantum-app-container,
+.sidebar-collapsed .app-container,
+.sidebar-collapsed .quantum-universe-container,
+.sidebar-collapsed .legacy-cube-container,
+.sidebar-collapsed .memory-dashboard {
+  margin-left: 0;
+  transition: margin-left var(--transition-slow);
 }
 
-/* Enhanced scrollbar styling for main content */
+/* Page Transitions */
+.page-enter {
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.page-enter-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 300ms, transform 300ms;
+}
+
+.page-exit {
+  opacity: 1;
+}
+
+.page-exit-active {
+  opacity: 0;
+  transition: opacity 300ms;
+}
+
+/* Loading States */
+.main-content.loading {
+  pointer-events: none;
+  opacity: 0.7;
+}
+
+.main-content.loading::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 60px;
+  height: 60px;
+  border: 4px solid rgba(255, 255, 255, 0.1);
+  border-top-color: var(--quantum-accent);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  z-index: var(--z-modal);
+}
+
+/* Enhanced Scrollbar for Main Content */
 .main-content::-webkit-scrollbar {
-  width: 8px;
+  width: 10px;
 }
 
 .main-content::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: 4px;
+  background: var(--quantum-surface-light);
+  border-radius: var(--radius-sm);
 }
 
 .main-content::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, #3b82f6, #8b5cf6);
-  border-radius: 4px;
+  background: linear-gradient(180deg, var(--quantum-primary), var(--quantum-accent));
+  border-radius: var(--radius-sm);
+  border: 2px solid transparent;
+  background-clip: padding-box;
 }
 
 .main-content::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(180deg, #8b5cf6, #3b82f6);
+  background: linear-gradient(180deg, var(--quantum-accent), var(--quantum-life));
+  background-clip: padding-box;
 }
 
-/* Animation for content loading */
-.main-content {
-  animation: contentLoad 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+/* Content Animation */
+.main-content > * {
+  animation: contentLoad 0.6s ease-out;
 }
 
 @keyframes contentLoad {
@@ -109,79 +169,69 @@
   }
 }
 
-/* Enhanced focus management */
+/* Responsive Design */
+@media (max-width: 768px) {
+  .main-content {
+    margin-left: 0 !important;
+    padding-bottom: 80px;
+  }
+  
+  .sidebar-collapsed .dashboard,
+  .sidebar-collapsed .quantum-app-container,
+  .sidebar-collapsed .app-container,
+  .sidebar-collapsed .quantum-universe-container,
+  .sidebar-collapsed .legacy-cube-container,
+  .sidebar-collapsed .memory-dashboard {
+    margin-left: 0 !important;
+  }
+}
+
+/* Accessibility */
 .main-content:focus {
-  outline: none;
+  outline: 2px solid var(--quantum-accent);
+  outline-offset: 4px;
 }
 
-/* Loading states */
-.main-content.loading {
-  pointer-events: none;
-  opacity: 0.7;
-}
-
-.main-content.loading::after {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 40px;
-  height: 40px;
-  border: 3px solid rgba(255, 255, 255, 0.3);
-  border-top: 3px solid #3b82f6;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-  z-index: 1000;
-}
-
-@keyframes spin {
-  0% { transform: translate(-50%, -50%) rotate(0deg); }
-  100% { transform: translate(-50%, -50%) rotate(360deg); }
-}
-
-/* Print styles */
+/* Print Styles */
 @media print {
+  .App::before,
+  .App::after {
+    display: none;
+  }
+  
   .main-content {
     margin-left: 0 !important;
     background: white !important;
-  }
-  
-  .App::before {
-    display: none;
+    color: black !important;
   }
 }
 
-/* High contrast mode support */
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  .App::before,
+  .App::after {
+    animation: none !important;
+  }
+  
+  .main-content,
+  .main-content > * {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* High Contrast Mode */
 @media (prefers-contrast: high) {
   .App {
     background: #000;
   }
   
-  .main-content::-webkit-scrollbar-thumb {
-    background: #fff;
-  }
-}
-
-/* Reduced motion support */
-@media (prefers-reduced-motion: reduce) {
-  .main-content {
-    animation: none;
-    transition: none;
+  .App::before,
+  .App::after {
+    display: none;
   }
   
-  .App.sidebar-collapsed .dashboard,
-  .App.sidebar-collapsed .quantum-app-container,
-  .App.sidebar-collapsed .app-container,
-  .App.sidebar-collapsed .quantum-universe-container,
-  .App.sidebar-collapsed .legacy-cube-container {
-    transition: none;
-  }
-}
-
-/* Dark mode enhancements */
-@media (prefers-color-scheme: dark) {
-  .App {
-    background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #0f0f23 100%);
+  .main-content {
+    border: 2px solid #fff;
   }
 }

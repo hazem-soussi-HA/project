@@ -1,0 +1,673 @@
+/* ========================================
+   QUANTUM CONSCIOUSNESS THEME
+   Global Design System for HAZoom
+   Professional UX/UI Framework
+   ======================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Rajdhani:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+/* ========================================
+   CSS Variables - Design Tokens
+   ======================================== */
+
+:root {
+  /* Primary Colors - Quantum Palette */
+  --quantum-energy: #f093fb;
+  --quantum-accent: #4ecdc4;
+  --quantum-life: #43e97b;
+  --quantum-void: #38f9d7;
+  --quantum-primary: #667eea;
+  --quantum-secondary: #764ba2;
+  --quantum-consciousness: #fa709a;
+  --quantum-intelligence: #fee140;
+  
+  /* Background Colors */
+  --quantum-dark: #0a0e27;
+  --quantum-darker: #050816;
+  --quantum-deep: #1a1f3a;
+  --quantum-surface: rgba(26, 31, 58, 0.8);
+  --quantum-surface-light: rgba(255, 255, 255, 0.05);
+  
+  /* Text Colors */
+  --text-primary: #ffffff;
+  --text-secondary: rgba(255, 255, 255, 0.8);
+  --text-tertiary: rgba(255, 255, 255, 0.6);
+  --text-muted: rgba(255, 255, 255, 0.4);
+  
+  /* Border & Shadow */
+  --border-color: rgba(102, 126, 234, 0.3);
+  --border-color-light: rgba(255, 255, 255, 0.1);
+  --shadow-sm: 0 2px 10px rgba(0, 0, 0, 0.2);
+  --shadow-md: 0 4px 20px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.4);
+  --shadow-glow: 0 0 20px rgba(102, 126, 234, 0.5);
+  
+  /* Spacing */
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 12px;
+  --spacing-lg: 20px;
+  --spacing-xl: 28px;
+  --spacing-2xl: 40px;
+  
+  /* Border Radius */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 18px;
+  --radius-full: 9999px;
+  
+  /* Typography */
+  --font-heading: 'Orbitron', monospace;
+  --font-body: 'Rajdhani', sans-serif;
+  --font-ui: 'Inter', sans-serif;
+  
+  /* Transitions */
+  --transition-fast: 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-base: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  
+  /* Z-Index Layers */
+  --z-background: 0;
+  --z-base: 1;
+  --z-dropdown: 1000;
+  --z-sticky: 1100;
+  --z-fixed: 1200;
+  --z-modal: 1300;
+  --z-popover: 1400;
+  --z-tooltip: 1500;
+}
+
+/* ========================================
+   Global Reset & Base Styles
+   ======================================== */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-body);
+  color: var(--text-primary);
+  background: var(--quantum-darker);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+/* ========================================
+   Typography System
+   ======================================== */
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  font-weight: 900;
+  line-height: 1.2;
+  margin-bottom: var(--spacing-md);
+}
+
+h1 {
+  font-size: 3rem;
+  background: linear-gradient(135deg, var(--quantum-energy), var(--quantum-life));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+h2 {
+  font-size: 2.25rem;
+  color: var(--quantum-accent);
+}
+
+h3 {
+  font-size: 1.75rem;
+  color: var(--text-primary);
+}
+
+h4 {
+  font-size: 1.5rem;
+  color: var(--text-secondary);
+}
+
+p {
+  margin-bottom: var(--spacing-md);
+  color: var(--text-secondary);
+}
+
+a {
+  color: var(--quantum-accent);
+  text-decoration: none;
+  transition: color var(--transition-base);
+}
+
+a:hover {
+  color: var(--quantum-life);
+}
+
+/* ========================================
+   Quantum Background System
+   ======================================== */
+
+.quantum-bg {
+  background: linear-gradient(135deg, 
+    var(--quantum-darker) 0%,
+    var(--quantum-dark) 25%,
+    var(--quantum-deep) 50%,
+    var(--quantum-dark) 75%,
+    var(--quantum-darker) 100%
+  );
+  position: relative;
+  min-height: 100vh;
+}
+
+.quantum-bg::before {
+  content: '';
+  position: fixed;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: 
+    radial-gradient(circle at 20% 80%, var(--quantum-primary) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, var(--quantum-accent) 0%, transparent 50%),
+    radial-gradient(circle at 40% 40%, var(--quantum-consciousness) 0%, transparent 50%);
+  opacity: 0.15;
+  animation: quantumFlow 20s ease-in-out infinite;
+  pointer-events: none;
+  z-index: var(--z-background);
+}
+
+.quantum-bg::after {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: 
+    radial-gradient(2px 2px at 20% 30%, white, transparent),
+    radial-gradient(2px 2px at 60% 70%, var(--quantum-accent), transparent),
+    radial-gradient(1px 1px at 50% 50%, var(--quantum-life), transparent),
+    radial-gradient(1px 1px at 80% 10%, var(--quantum-energy), transparent);
+  background-size: 200% 200%;
+  animation: particleFloat 30s ease infinite;
+  opacity: 0.4;
+  pointer-events: none;
+  z-index: var(--z-background);
+}
+
+@keyframes quantumFlow {
+  0%, 100% { transform: rotate(0deg) scale(1); }
+  50% { transform: rotate(180deg) scale(1.2); }
+}
+
+@keyframes particleFloat {
+  0%, 100% { background-position: 0% 0%; }
+  50% { background-position: 100% 100%; }
+}
+
+/* ========================================
+   Card Components
+   ======================================== */
+
+.quantum-card {
+  background: var(--quantum-surface);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-lg);
+  box-shadow: var(--shadow-md);
+  transition: all var(--transition-base);
+  position: relative;
+  overflow: hidden;
+  max-width: 100%;
+}
+
+.quantum-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg,
+    transparent,
+    rgba(255, 255, 255, 0.1),
+    transparent
+  );
+  transition: left var(--transition-slow);
+}
+
+.quantum-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg), var(--shadow-glow);
+  border-color: var(--quantum-primary);
+}
+
+.quantum-card:hover::before {
+  left: 100%;
+}
+
+.quantum-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--spacing-md);
+  padding-bottom: var(--spacing-md);
+  border-bottom: 1px solid var(--border-color-light);
+}
+
+.quantum-card-title {
+  font-family: var(--font-heading);
+  font-size: 1.25rem;
+  color: var(--quantum-accent);
+  margin: 0;
+}
+
+.quantum-card-body {
+  color: var(--text-secondary);
+}
+
+/* ========================================
+   Button System
+   ======================================== */
+
+.btn {
+  font-family: var(--font-ui);
+  font-size: 0.9rem;
+  font-weight: 600;
+  padding: 10px 20px;
+  border-radius: var(--radius-full);
+  border: none;
+  cursor: pointer;
+  transition: all var(--transition-base);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-sm);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  position: relative;
+  overflow: hidden;
+  min-height: 40px;
+}
+
+.btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, 
+    rgba(255, 255, 255, 0.2),
+    rgba(255, 255, 255, 0)
+  );
+  opacity: 0;
+  transition: opacity var(--transition-base);
+}
+
+.btn:hover::before {
+  opacity: 1;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--quantum-primary), var(--quantum-accent));
+  color: white;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 25px rgba(102, 126, 234, 0.6);
+}
+
+.btn-secondary {
+  background: linear-gradient(135deg, var(--quantum-consciousness), var(--quantum-energy));
+  color: white;
+  box-shadow: 0 4px 15px rgba(250, 112, 154, 0.4);
+}
+
+.btn-secondary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 25px rgba(250, 112, 154, 0.6);
+}
+
+.btn-outline {
+  background: transparent;
+  border: 2px solid var(--quantum-primary);
+  color: var(--quantum-primary);
+}
+
+.btn-outline:hover {
+  background: var(--quantum-primary);
+  color: white;
+  transform: translateY(-2px);
+}
+
+.btn-ghost {
+  background: var(--quantum-surface-light);
+  border: 1px solid var(--border-color-light);
+  color: var(--text-secondary);
+}
+
+.btn-ghost:hover {
+  background: var(--quantum-surface);
+  border-color: var(--border-color);
+  color: var(--text-primary);
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.btn-sm {
+  padding: 6px 14px;
+  font-size: 0.8rem;
+  min-height: 32px;
+}
+
+.btn-lg {
+  padding: 14px 28px;
+  font-size: 1rem;
+  min-height: 48px;
+}
+
+/* ========================================
+   Input System
+   ======================================== */
+
+.input,
+.textarea,
+.select {
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  padding: 10px 16px;
+  background: var(--quantum-dark);
+  border: 2px solid var(--border-color);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  transition: all var(--transition-base);
+  width: 100%;
+  min-height: 40px;
+}
+
+.input:focus,
+.textarea:focus,
+.select:focus {
+  outline: none;
+  background: var(--quantum-surface);
+  border-color: var(--quantum-primary);
+  box-shadow: 0 0 20px rgba(102, 126, 234, 0.3);
+}
+
+.input::placeholder,
+.textarea::placeholder {
+  color: var(--text-muted);
+}
+
+.textarea {
+  resize: vertical;
+  min-height: 80px;
+  line-height: 1.4;
+}
+
+.select {
+  cursor: pointer;
+}
+
+/* ========================================
+   Badge System
+   ======================================== */
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 12px;
+  border-radius: var(--radius-full);
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.badge-primary {
+  background: linear-gradient(135deg, var(--quantum-primary), var(--quantum-accent));
+  color: white;
+}
+
+.badge-success {
+  background: var(--quantum-life);
+  color: var(--quantum-darker);
+}
+
+.badge-warning {
+  background: var(--quantum-intelligence);
+  color: var(--quantum-darker);
+}
+
+.badge-error {
+  background: var(--quantum-consciousness);
+  color: white;
+}
+
+.badge-outline {
+  background: transparent;
+  border: 1px solid var(--border-color);
+  color: var(--text-secondary);
+}
+
+/* ========================================
+   Loading & Animation States
+   ======================================== */
+
+.loading {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  border-top-color: var(--quantum-accent);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.fade-in {
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.slide-up {
+  animation: slideUp 0.5s ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ========================================
+   Grid & Layout System
+   ======================================== */
+
+.container {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 var(--spacing-lg);
+}
+
+.grid {
+  display: grid;
+  gap: var(--spacing-lg);
+}
+
+.grid-cols-1 { grid-template-columns: repeat(1, 1fr); }
+.grid-cols-2 { grid-template-columns: repeat(2, 1fr); }
+.grid-cols-3 { grid-template-columns: repeat(3, 1fr); }
+.grid-cols-4 { grid-template-columns: repeat(4, 1fr); }
+
+.flex {
+  display: flex;
+}
+
+.flex-col {
+  flex-direction: column;
+}
+
+.items-center {
+  align-items: center;
+}
+
+.justify-center {
+  justify-content: center;
+}
+
+.justify-between {
+  justify-content: space-between;
+}
+
+.gap-sm { gap: var(--spacing-sm); }
+.gap-md { gap: var(--spacing-md); }
+.gap-lg { gap: var(--spacing-lg); }
+
+/* ========================================
+   Utility Classes
+   ======================================== */
+
+.text-center { text-align: center; }
+.text-left { text-align: left; }
+.text-right { text-align: right; }
+
+.mt-sm { margin-top: var(--spacing-sm); }
+.mt-md { margin-top: var(--spacing-md); }
+.mt-lg { margin-top: var(--spacing-lg); }
+.mt-xl { margin-top: var(--spacing-xl); }
+
+.mb-sm { margin-bottom: var(--spacing-sm); }
+.mb-md { margin-bottom: var(--spacing-md); }
+.mb-lg { margin-bottom: var(--spacing-lg); }
+.mb-xl { margin-bottom: var(--spacing-xl); }
+
+.p-sm { padding: var(--spacing-sm); }
+.p-md { padding: var(--spacing-md); }
+.p-lg { padding: var(--spacing-lg); }
+.p-xl { padding: var(--spacing-xl); }
+
+/* ========================================
+   Scrollbar Styling
+   ======================================== */
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--quantum-surface-light);
+  border-radius: var(--radius-sm);
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, var(--quantum-primary), var(--quantum-accent));
+  border-radius: var(--radius-sm);
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, var(--quantum-accent), var(--quantum-life));
+  background-clip: padding-box;
+}
+
+/* ========================================
+   Responsive Breakpoints
+   ======================================== */
+
+@media (max-width: 1280px) {
+  .container {
+    max-width: 1200px;
+  }
+}
+
+@media (max-width: 1024px) {
+  :root {
+    font-size: 15px;
+  }
+  
+  .grid-cols-4 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  :root {
+    font-size: 14px;
+  }
+  
+  .grid-cols-2,
+  .grid-cols-3,
+  .grid-cols-4 {
+    grid-template-columns: 1fr;
+  }
+  
+  h1 { font-size: 2rem; }
+  h2 { font-size: 1.75rem; }
+  h3 { font-size: 1.5rem; }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 0 var(--spacing-md);
+  }
+}
+
+/* ========================================
+   Print Styles
+   ======================================== */
+
+@media print {
+  .quantum-bg::before,
+  .quantum-bg::after {
+    display: none;
+  }
+  
+  * {
+    background: white !important;
+    color: black !important;
+    box-shadow: none !important;
+  }
+}

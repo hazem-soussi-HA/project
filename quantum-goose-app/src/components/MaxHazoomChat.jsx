@@ -1,4 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { io } from 'socket.io-client';
+import ModelSelector from './ModelSelector';
+import QuantumStars from './QuantumStars';
 import './MaxHazoomChat.css';
 
 const MaxHazoomChat = ({ sidebarCollapsed: externalCollapsed = false }) => {
@@ -7,9 +10,109 @@ const MaxHazoomChat = ({ sidebarCollapsed: externalCollapsed = false }) => {
   const [isTyping, setIsTyping] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(externalCollapsed);
   const [currentTheme, setCurrentTheme] = useState('light');
+  const [socket, setSocket] = useState(null);
+  const [isConnected, setIsConnected] = useState(false);
+  const [sessionId, setSessionId] = useState('max-hazoom-default');
+  const [userName, setUserName] = useState('User');
+  const [activeRoom, setActiveRoom] = useState('general');
+  const [currentModel, setCurrentModel] = useState('glm-4.6:cloud');
+  const [showModelSelector, setShowModelSelector] = useState(false);
   
   const messagesEndRef = useRef(null);
   const inputRef = useRef(null);
+
+  // WebSocket Service Configuration
+  const SOCKET_CONFIG = {
+    url: 'http://localhost:5001',
+    path: '/socket.io',
+    options: {
+      reconnection: true,
+      reconnectionDelay: 1000,
+      reconnectionAttempts: 5,
+      timeout: 20000,
+      forceNew: true,
+      query: {
+        api_key: 'quantum-goose-secure-key-2025'
+      }
+    }
+  };
+
+  // Initialize WebSocket connection
+  useEffect(() => {
+    // Generate unique session ID
+    const newSessionId = `max-hazoom-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+    setSessionId(newSessionId);
+
+    // Initialize socket connection
+    const socketInstance = io(SOCKET_CONFIG.url, SOCKET_CONFIG.options);
+    setSocket(socketInstance);
+
+    // Connection event handlers
+    socketInstance.on('connect', () => {
+      console.log('✅ Connected to Max-Hazoom Chat Service');
+      setIsConnected(true);
+      
+      // Join chat room
+      socketInstance.emit('join_chat', {
+        session_id: newSessionId,
+        user_name: userName,
+        room: activeRoom
+      });
+    });
+
+    socketInstance.on('disconnect', () => {
+      console.log('❌ Disconnected from Max-Hazoom Chat Service');
+      setIsConnected(false);
+    });
+
+    socketInstance.on('connected', (data) => {
+      console.log('🎯 Max-Hazoom Service:', data.message);
+    });
+
+    // Chat message handlers
+    socketInstance.on('new_message', (messageData) => {
+      setMessages(prev => [...prev, {
+        id: messageData.id,
+        text: messageData.message,
+        sender: messageData.user_name === 'Goose AI' ? 'ai' : 'user',
+        timestamp: new Date(messageData.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}),
+        userName: messageData.user_name
+      }]);
+    });
+
+    socketInstance.on('ai_response', (aiMessageData) => {
+      setIsTyping(false);
+      setMessages(prev => [...prev, {
+        id: aiMessageData.id,
+        text: aiMessageData.message,
+        sender: 'ai',
+        timestamp: new Date(aiMessageData.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}),
+        userName: 'Goose AI'
+      }]);
+    });
+
+    socketInstance.on('user_typing', (data) => {
+      // Handle other users typing (if multiple users)
+      console.log(`User ${data.user_name} is ${data.is_typing ? 'typing' : 'stopped typing'}`);
+    });
+
+    socketInstance.on('chat_cleared', (data) => {
+      setMessages([]);
+      localStorage.removeItem('max-hazoom-chat-history');
+    });
+
+    socketInstance.on('error', (error) => {
+      console.error('🚨 WebSocket Error:', error);
+      setIsTyping(false);
+    });
+
+    // Cleanup on unmount
+    return () => {
+      if (socketInstance) {
+        socketInstance.disconnect();
+      }
+    };
+  }, []);
 
   // Sync with external sidebarCollapsed prop
   useEffect(() => {
@@ -18,7 +121,7 @@ const MaxHazoomChat = ({ sidebarCollapsed: externalCollapsed = false }) => {
 
   const quickActions = [
     "Hello, how can you help me?",
-    "What can you do?",
+    "What can you do?", 
     "Help me get started",
     "Show me available tools"
   ];
@@ -110,44 +213,78 @@ const MaxHazoomChat = ({ sidebarCollapsed: externalCollapsed = false }) => {
   };
 
   const handleSendMessage = async () => {
-    if (!inputMessage.trim() || isTyping) return;
+    if (!inputMessage.trim() || isTyping || !socket || !isConnected) return;
 
     const userMessage = inputMessage.trim();
     setInputMessage('');
     setIsTyping(true);
 
-    // Add user message
-    const userMsg = {
-      id: Date.now(),
-      text: userMessage,
-      sender: 'user',
-      timestamp: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})
-    };
-    setMessages(prev => [...prev, userMsg]);
+    // Send message via WebSocket
+    if (socket && isConnected) {
+      socket.emit('send_message', {
+        message: userMessage,
+        session_id: sessionId,
+        user_name: userName,
+        room: activeRoom,
+        type: 'text'
+      });
 
-    try {
-      const response = await simulateAIResponse(userMessage);
-      
-      const aiMsg = {
-        id: Date.now() + 1,
-        text: response,
-        sender: 'ai',
-        timestamp: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})
-      };
-      setMessages(prev => [...prev, aiMsg]);
-      
-    } catch (error) {
-      const errorMsg = {
-        id: Date.now() + 1,
-        text: "I apologize, but I encountered an error processing your request. Please try again.",
-        sender: 'ai',
-        timestamp: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})
-      };
-      setMessages(prev => [...prev, errorMsg]);
-    } finally {
-      setIsTyping(false);
+      // Show typing indicator
+      socket.emit('typing_start', {
+        room: activeRoom,
+        user_name: userName
+      });
+    } else {
+      // Fallback to local simulation if not connected
+      console.warn('Not connected to WebSocket service, using local simulation');
+      try {
+        const response = await simulateAIResponse(userMessage);
+        setTimeout(() => {
+          setIsTyping(false);
+          addMessage(response, 'ai');
+        }, 1000 + Math.random() * 2000);
+      } catch (error) {
+        setIsTyping(false);
+        console.error('Error with local simulation:', error);
+      }
     }
   };
+
+  // Handle input focus events for typing indicators
+  const handleInputFocus = () => {
+    if (socket && isConnected) {
+      socket.emit('typing_start', {
+        room: activeRoom,
+        user_name: userName
+      });
+    }
+  };
+
+  const handleInputBlur = () => {
+    if (socket && isConnected) {
+      socket.emit('typing_stop', {
+        room: activeRoom,
+        user_name: userName
+      });
+    }
+  };
+
+  // Service status component
+  const ServiceStatus = () => (
+    <div className="service-status">
+      <div className={`status-indicator ${isConnected ? 'connected' : 'disconnected'}`}>
+        <div className="status-dot"></div>
+        <span>
+          {isConnected ? '🪿 Max-Hazoom Connected' : '❌ Service Unavailable'}
+        </span>
+      </div>
+      {isConnected && (
+        <div className="service-info">
+          <small>Session: {sessionId.slice(-8)} | Room: {activeRoom}</small>
+        </div>
+      )}
+    </div>
+  );
 
   const handleKeyDown = (e) => {
     if (e.key === 'Enter' && !e.shiftKey) {
@@ -303,91 +440,122 @@ const MaxHazoomChat = ({ sidebarCollapsed: externalCollapsed = false }) => {
             <span className="nav-item-icon">🌙</span>
             <span>Toggle Theme</span>
           </div>
+          <div className="nav-item" onClick={() => setShowModelSelector(!showModelSelector)}>
+            <span className="nav-item-icon">🧠</span>
+            <span>AI Models</span>
+          </div>
         </div>
       </div>
 
-      {/* Main Chat Area */}
-      <div className={`chat-container ${sidebarCollapsed ? 'full-width' : ''}`}>
-        <div className="chat-header">
-          <h1>🪿 Goose AI Assistant</h1>
-          <p>Your intelligent companion powered by Max-Hazoom Navigator</p>
-        </div>
+      {/* Main Chat Area with Quantum Stars */}
+      <div className={`chat-container-with-stars ${sidebarCollapsed ? 'full-width' : ''}`}>
+        <div className="chat-container-main">
+          <div className="chat-header">
+            <h1>🪿 Goose AI Assistant</h1>
+            <p>Your intelligent companion powered by Max-Hazoom Navigator</p>
+            <ServiceStatus />
+          </div>
 
-        <div className="chat-messages">
-          {messages.length === 0 ? (
-            <div className="welcome-message">
-              <div className="welcome-icon">🚀</div>
-              <div className="welcome-title">Welcome to Max-Hazoom Navigator!</div>
-              <div className="welcome-subtitle">
-                I'm Goose, your AI assistant. Start chatting by typing a message below, 
-                or use the quick actions in the navigator sidebar.
-              </div>
-            </div>
-          ) : (
-            messages.map((message) => (
-              <div key={message.id} className={`message ${message.sender}`}>
-                <div className="message-avatar">
-                  {message.sender === 'user' ? 'U' : 'G'}
+          <div className="chat-messages">
+            {messages.length === 0 ? (
+              <div className="welcome-message">
+                <div className="welcome-icon">🚀</div>
+                <div className="welcome-title">Welcome to Max-Hazoom Navigator!</div>
+                <div className="welcome-subtitle">
+                  I'm Goose, your AI assistant. Start chatting by typing a message below,
+                  or use the quick actions in the navigator sidebar.
                 </div>
+              </div>
+            ) : (
+              messages.map((message) => (
+                <div key={message.id} className={`message ${message.sender}`}>
+                  <div className="message-avatar">
+                    {message.sender === 'user' ? 'U' : 'G'}
+                  </div>
+                  <div className="message-content">
+                    <div dangerouslySetInnerHTML={{ __html: message.text.replace(/\n/g, '<br>') }} />
+                    <div className="message-timestamp">{message.timestamp}</div>
+                  </div>
+                </div>
+              ))
+            )}
+
+            {isTyping && (
+              <div className="message ai">
+                <div className="message-avatar">G</div>
                 <div className="message-content">
-                  <div dangerouslySetInnerHTML={{ __html: message.text.replace(/\n/g, '<br>') }} />
-                  <div className="message-timestamp">{message.timestamp}</div>
-                </div>
-              </div>
-            ))
-          )}
-          
-          {isTyping && (
-            <div className="message ai">
-              <div className="message-avatar">G</div>
-              <div className="message-content">
-                <div className="typing-indicator">
-                  <span>Max-Hazoom is thinking</span>
-                  <div className="typing-dots">
-                    <div></div>
-                    <div></div>
-                    <div></div>
+                  <div className="typing-indicator">
+                    <span>Max-Hazoom is thinking</span>
+                    <div className="typing-dots">
+                      <div></div>
+                      <div></div>
+                      <div></div>
+                    </div>
                   </div>
                 </div>
               </div>
+            )}
+            <div ref={messagesEndRef} />
+          </div>
+
+          <div className="chat-input-container">
+            <div className="quick-actions">
+              {quickActions.map((action, index) => (
+                <button
+                  key={index}
+                  className="quick-action-btn"
+                  onClick={() => handleQuickAction(action)}
+                >
+                  {action.split(',')[0]}
+                </button>
+              ))}
             </div>
-          )}
-          <div ref={messagesEndRef} />
+
+            <div className="chat-input-wrapper">
+              <textarea
+                ref={inputRef}
+                className="chat-input"
+                value={inputMessage}
+                onChange={(e) => setInputMessage(e.target.value)}
+                onKeyDown={handleKeyDown}
+                onFocus={handleInputFocus}
+                onBlur={handleInputBlur}
+                placeholder={isConnected ? "Type your message here... (Press Enter to send, Shift+Enter for new line)" : "Service unavailable - check connection to Max-Hazoom service"}
+                rows="1"
+                disabled={!isConnected}
+              />
+              <button
+                className="send-btn"
+                onClick={handleSendMessage}
+                disabled={!inputMessage.trim() || isTyping}
+              >
+                ➤
+              </button>
+            </div>
+          </div>
         </div>
 
-        <div className="chat-input-container">
-          <div className="quick-actions">
-            {quickActions.map((action, index) => (
-              <button 
-                key={index}
-                className="quick-action-btn" 
-                onClick={() => handleQuickAction(action)}
-              >
-                {action.split(',')[0]}
-              </button>
-            ))}
-          </div>
-          
-          <div className="chat-input-wrapper">
-            <textarea 
-              ref={inputRef}
-              className="chat-input" 
-              value={inputMessage}
-              onChange={(e) => setInputMessage(e.target.value)}
-              onKeyDown={handleKeyDown}
-              placeholder="Type your message here... (Press Enter to send, Shift+Enter for new line)"
-              rows="1"
+        {/* Quantum Stars Visualization - Parallel to conversation */}
+        <QuantumStars
+          messageCount={messages.length}
+          isTyping={isTyping}
+        />
+      </div>
+
+      {/* Model Selector Modal */}
+      {showModelSelector && (
+        <div className="model-selector-overlay" onClick={() => setShowModelSelector(false)}>
+          <div className="model-selector-modal" onClick={(e) => e.stopPropagation()}>
+            <ModelSelector
+              currentModel={currentModel}
+              onModelChange={(model) => {
+                setCurrentModel(model);
+                setShowModelSelector(false);
+              }}
             />
-            <button 
-              className="send-btn" 
-              onClick={handleSendMessage}
-              disabled={!inputMessage.trim() || isTyping}
-            >
-              ➤
-            </button>
           </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };

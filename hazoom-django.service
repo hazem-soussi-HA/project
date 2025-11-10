@@ -1,0 +1,19 @@
+[Unit]
+Description=HAZoom Django Quantum Goose Server
+After=network.target ollama.service
+Wants=ollama.service
+
+[Service]
+Type=simple
+User=hazem
+WorkingDirectory=/d/project
+Environment=PATH=/usr/local/bin:/usr/bin:/bin
+Environment=DJANGO_SETTINGS_MODULE=quantum_goose_project.settings
+ExecStart=/usr/bin/python3 /d/project/manage.py runserver 0.0.0.0:9000
+Restart=always
+RestartSec=10
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target

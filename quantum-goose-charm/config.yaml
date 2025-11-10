@@ -1,0 +1,169 @@
+options:
+  # Django Configuration
+  django-debug:
+    type: boolean
+    default: false
+    description: Enable Django debug mode for development
+  
+  django-secret-key:
+    type: string
+    description: Django secret key for session encryption and security
+    default: ""
+  
+  django-allowed-hosts:
+    type: string
+    description: Comma-separated list of allowed host names
+    default: "*"
+  
+  django-database-url:
+    type: string
+    description: Database connection URL (sqlite://, mysql://, postgresql://, etc.)
+    default: "sqlite:///var/lib/quantum-goose/db.sqlite3"
+  
+  # React Configuration
+  react-build-mode:
+    type: string
+    default: "production"
+    description: React build mode (development, production)
+  
+  react-api-url:
+    type: string
+    description: API URL for React frontend to connect to
+    default: ""
+  
+  # LLM Configuration
+  llm-provider:
+    type: string
+    default: "simulation"
+    description: LLM provider to use (openai, anthropic, ollama, simulation)
+  
+  llm-api-key:
+    type: string
+    description: API key for chosen LLM provider
+    default: ""
+  
+  llm-base-url:
+    type: string
+    description: Base URL for custom LLM API (e.g., Ollama server)
+    default: "http://localhost:11434"
+  
+  llm-model:
+    type: string
+    default: "llama2"
+    description: Model name for the chosen LLM provider
+  
+  # Performance Configuration
+  max-workers:
+    type: int
+    default: 4
+    description: Maximum number of Gunicorn worker processes
+  
+  worker-class:
+    type: string
+    default: "uvicorn.workers.UvicornWorker"
+    description: Gunicorn worker class
+  
+  timeout:
+    type: int
+    default: 30
+    description: Request timeout in seconds
+  
+  memory-limit:
+    type: string
+    default: "2G"
+    description: Memory limit for the application
+  
+  # Scaling Configuration
+  auto-scaling:
+    type: boolean
+    default: true
+    description: Enable automatic scaling based on load
+  
+  min-units:
+    type: int
+    default: 1
+    description: Minimum number of units in the application
+  
+  max-units:
+    type: int
+    default: 10
+    description: Maximum number of units in the application
+  
+  target-cpu:
+    type: int
+    default: 70
+    description: CPU utilization percentage for auto-scaling
+  
+  target-memory:
+    type: int
+    default: 80
+    description: Memory utilization percentage for auto-scaling
+  
+  # Monitoring Configuration
+  enable-monitoring:
+    type: boolean
+    default: true
+    description: Enable system monitoring and metrics
+  
+  metrics-port:
+    type: int
+    default: 9090
+    description: Port for Prometheus metrics endpoint
+  
+  log-level:
+    type: string
+    default: "INFO"
+    description: Application log level (DEBUG, INFO, WARNING, ERROR)
+  
+  # Security Configuration
+  enable-ssl:
+    type: boolean
+    default: false
+    description: Enable SSL/TLS encryption
+  
+  ssl-certificate:
+    type: string
+    description: SSL certificate content
+    default: ""
+  
+  ssl-private-key:
+    type: string
+    description: SSL private key content
+    default: ""
+  
+  # Features Configuration
+  enable-websocket:
+    type: boolean
+    default: true
+    description: Enable WebSocket support for real-time features
+  
+  enable-chat-history:
+    type: boolean
+    default: true
+    description: Enable chat history persistence
+  
+  max-conversation-history:
+    type: int
+    default: 100
+    description: Maximum number of messages to keep in conversation history
+  
+  # Intelligence Levels Configuration
+  nano-model:
+    type: string
+    default: "phi"
+    description: Model for nano intelligence level (fastest)
+  
+  standard-model:
+    type: string
+    default: "mistral"
+    description: Model for standard intelligence level
+  
+  super-model:
+    type: string
+    default: "gpt-3.5-turbo"
+    description: Model for super intelligence level
+  
+  quantum-model:
+    type: string
+    default: "gpt-4"
+    description: Model for quantum intelligence level (highest)

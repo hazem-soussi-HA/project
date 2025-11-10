@@ -20,7 +20,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-d#86jl=e2usi2(6bm3fu!p)=3cf)ma@zs_#h4ql94z1)9#(ex%'
+SECRET_KEY = 'kZZavogGrEqKWJUgTlEw9WU3PPwFAl8-JccnsnKig_pn6astvOTXxZK9wpgOp1Q73AQ'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -37,11 +37,14 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'corsheaders',
     'quantum_goose_app',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
+    'quantum_goose_app.middleware.SecurityHeadersMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -136,13 +139,48 @@ SECURE_SSL_REDIRECT = False
 SECURE_HSTS_SECONDS = 0
 SECURE_HSTS_INCLUDE_SUBDOMAINS = False
 SECURE_HSTS_PRELOAD = False
-SECURE_CONTENT_TYPE_NOSNIFF = False
-SECURE_BROWSER_XSS_FILTER = False
-SESSION_COOKIE_SECURE = False
-CSRF_COOKIE_SECURE = False
-X_FRAME_OPTIONS = 'SAMEORIGIN'
+SECURE_CONTENT_TYPE_NOSNIFF = True
+SECURE_BROWSER_XSS_FILTER = True
+SESSION_COOKIE_SECURE = False  # Set to True in production with HTTPS
+CSRF_COOKIE_SECURE = False    # Set to True in production with HTTPS
+X_FRAME_OPTIONS = 'DENY'
+
+# Additional security headers
+SECURE_REFERRER_POLICY = 'strict-origin-when-cross-origin'
+SECURE_CROSS_ORIGIN_OPENER_POLICY = 'same-origin'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# CORS settings
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:5173",
+    "http://localhost:3000",
+    "http://127.0.0.1:5173",
+    "http://127.0.0.1:3000",
+]
+
+CORS_ALLOW_CREDENTIALS = True
+
+CORS_ALLOW_METHODS = [
+    'DELETE',
+    'GET',
+    'OPTIONS',
+    'PATCH',
+    'POST',
+    'PUT',
+]
+
+CORS_ALLOW_HEADERS = [
+    'accept',
+    'accept-encoding',
+    'authorization',
+    'content-type',
+    'dnt',
+    'origin',
+    'user-agent',
+    'x-csrftoken',
+    'x-requested-with',
+]

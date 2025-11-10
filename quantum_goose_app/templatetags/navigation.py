@@ -27,7 +27,7 @@ def main_navigation(active_item=None):
             },
             {
                 'name': 'Quantum Services',
-                'url': 'services_index',
+                'url': 'quantum_goose_app:services_index',
                 'icon': 'fas fa-cube',
                 'description': 'Quantum applications'
             }
@@ -42,25 +42,25 @@ def service_navigation():
         'services': [
             {
                 'name': 'Goose Quantum Navigator',
-                'url': 'quantum_navigator',
+                'url': 'quantum_goose_app:quantum_navigator',
                 'icon': 'fas fa-compass',
                 'description': 'Life Quantum Integration'
             },
             {
                 'name': 'Quantum Cube Universe',
-                'url': 'quantum_cube_universe',
+                'url': 'quantum_goose_app:quantum_cube_universe',
                 'icon': 'fas fa-cube',
                 'description': '3D quantum cube'
             },
             {
                 'name': 'Max Hazoom Chat',
-                'url': 'max_hazoom_chat',
+                'url': 'quantum_goose_app:max_hazoom_chat',
                 'icon': 'fas fa-comments',
                 'description': 'Interactive chat'
             },
             {
                 'name': '3D Cube Page',
-                'url': 'cube_3d_page',
+                'url': 'quantum_goose_app:cube_3d_page',
                 'icon': 'fas fa-cube',
                 'description': 'Advanced 3D cube'
             }
@@ -102,25 +102,25 @@ def sidebar_navigation(current_path=None):
                 'items': [
                     {
                         'name': 'Goose Navigator',
-                        'url': 'quantum_navigator',
+                        'url': 'quantum_goose_app:quantum_navigator',
                         'icon': 'fas fa-compass',
                         'description': 'Life Quantum Integration interface'
                     },
                     {
                         'name': 'Quantum Cube',
-                        'url': 'quantum_cube_universe',
+                        'url': 'quantum_goose_app:quantum_cube_universe',
                         'icon': 'fas fa-cube',
                         'description': '3D quantum cube universe'
                     },
                     {
                         'name': 'Max Hazoom Chat',
-                        'url': 'max_hazoom_chat',
+                        'url': 'quantum_goose_app:max_hazoom_chat',
                         'icon': 'fas fa-comments',
                         'description': 'Interactive chat interface'
                     },
                     {
                         'name': '3D Cube Page',
-                        'url': 'cube_3d_page',
+                        'url': 'quantum_goose_app:cube_3d_page',
                         'icon': 'fas fa-cube',
                         'description': 'Advanced 3D cube experience'
                     }

@@ -18,6 +18,12 @@
     </div>
 
     <!-- Services Grid -->
+    {% if not camera_available %}
+    <div class="alert alert-warning d-flex align-items-center gap-2" role="alert">
+        <i class="fas fa-triangle-exclamation"></i>
+        <span>Quantum Camera Stream is currently unavailable. Ensure a camera device is connected before launching.</span>
+    </div>
+    {% endif %}
     <div class="row g-4 mb-5">
         {% for service in services %}
         <div class="col-lg-6 col-md-12">
@@ -35,6 +41,11 @@
                     
                     <div class="d-flex justify-content-between align-items-center mt-auto">
                         <div class="service-features">
+                            {% if service.priority_label %}
+                            <span class="badge priority-badge me-2">
+                                <i class="fas fa-signal"></i> {{ service.priority_label }}
+                            </span>
+                            {% endif %}
                             <span class="badge bg-primary-subtle text-primary me-2">
                                 <i class="fas fa-star"></i> Quantum
                             </span>
@@ -75,6 +86,65 @@
                         Back to Home
                     </a>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hazoom Documentation -->
+    <div class="hazoom-doc-section mt-5" id="hazoom-doc">
+        <div class="row g-4">
+            <div class="col-lg-3">
+                <div class="doc-toc">
+                    <h5 class="doc-toc-title">Hazoom Guide</h5>
+                    <nav class="doc-toc-nav">
+                        <a href="#hazoom-overview">1. Vision d'ensemble</a>
+                        <a href="#hazoom-pillars">2. Piliers clés</a>
+                        <a href="#hazoom-flow">3. Parcours utilisateur</a>
+                        <a href="#hazoom-safety">4. Sérénité & sécurité</a>
+                        <a href="#hazoom-start">5. Démarrage rapide</a>
+                    </nav>
+                </div>
+            </div>
+            <div class="col-lg-9">
+                <article class="doc-content">
+                    <section id="hazoom-overview">
+                        <h3>1. Vision d'ensemble</h3>
+                        <p>Hazoom réunit nos expériences quantiques dans un récit clair : offrir un compagnon numérique serein qui relie navigation, mémoire et assistance créative. Chaque module présent sur cette page est une "porte" qui mène à un aspect précis de ce compagnon.</p>
+                    </section>
+                    <section id="hazoom-pillars">
+                        <h3>2. Piliers clés</h3>
+                        <ul class="doc-list">
+                            <li><strong>Navigation consciente :</strong> orienter l'utilisateur vers les bons outils sans surcharge.</li>
+                            <li><strong>Dialogue empathique :</strong> Max Hazoom Chat et HAZoom LLM cultivent une voix rassurante et pédagogique.</li>
+                            <li><strong>Mémoire vivante :</strong> le système retient préférences et contextes pour alléger la charge mentale.</li>
+                            <li><strong>Expériences immersives :</strong> univers visuels (cube, voyage) rendent palpable l'imaginaire Hazoom.</li>
+                        </ul>
+                    </section>
+                    <section id="hazoom-flow">
+                        <h3>3. Parcours utilisateur</h3>
+                        <ol class="doc-steps">
+                            <li><strong>Accueil :</strong> l'utilisateur découvre les services via cette grille.</li>
+                            <li><strong>Orientation :</strong> les descriptions simples éclairent le choix le plus adapté.</li>
+                            <li><strong>Interaction :</strong> chaque service propose des actions claires (chat, navigation, visualisation).</li>
+                            <li><strong>Mémorisation :</strong> les interactions importantes peuvent être retenues et réutilisées.</li>
+                            <li><strong>Retour :</strong> l'utilisateur revient ici grâce au fil conducteur commun.</li>
+                        </ol>
+                    </section>
+                    <section id="hazoom-safety">
+                        <h3>4. Sérénité & sécurité</h3>
+                        <p>Notre point de vue met la confiance au centre : interfaces calmes, messages explicites, options de contrôle utilisateur (effacement, export, choix du niveau d'intelligence) et garde-fous côté serveur pour conserver l'expérience fluide et sûre.</p>
+                    </section>
+                    <section id="hazoom-start">
+                        <h3>5. Démarrage rapide</h3>
+                        <ul class="doc-list">
+                            <li>Commencer par <em>Max Hazoom Chat</em> pour comprendre la voix du système.</li>
+                            <li>Explorer <em>Quantum Travel</em> et <em>Quantum Cube</em> pour visualiser l'univers.</li>
+                            <li>Activer la mémoire si besoin de suivi sur plusieurs sessions.</li>
+                            <li>Consulter l'API pour brancher ses propres applications.</li>
+                        </ul>
+                        <p class="doc-conclusion">Cette documentation condensée se lit comme un PDF : une table des matières fixe et des sections brèves pour garder le cap. Hazoom vise la simplicité chaleureuse à chaque étape.</p>
+                    </section>
+                </article>
             </div>
         </div>
     </div>
@@ -153,6 +223,97 @@
     
     .service-icon i {
         font-size: 1.5rem !important;
+    }
+}
+
+.hazoom-doc-section {
+    background: white;
+    border-radius: 24px;
+    padding: 2.5rem 2rem;
+    box-shadow: 0 18px 40px rgba(15, 23, 42, 0.08);
+}
+
+.doc-toc {
+    position: sticky;
+    top: 100px;
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.08), rgba(139, 92, 246, 0.12));
+    border-radius: 18px;
+    padding: 1.5rem;
+}
+
+.doc-toc-title {
+    font-weight: 700;
+    margin-bottom: 1rem;
+    color: #1e40af;
+    letter-spacing: 0.02em;
+}
+
+.doc-toc-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.doc-toc-nav a {
+    color: #1f2937;
+    text-decoration: none;
+    font-weight: 600;
+    padding: 0.5rem 0.75rem;
+    border-radius: 12px;
+    transition: all 0.2s ease;
+    background: rgba(255, 255, 255, 0.6);
+}
+
+.doc-toc-nav a:hover {
+    background: rgba(59, 130, 246, 0.12);
+    color: #1d4ed8;
+    transform: translateX(4px);
+}
+
+.doc-content h3 {
+    font-weight: 700;
+    margin-bottom: 1rem;
+    color: #1d4ed8;
+}
+
+.doc-content p {
+    color: #4b5563;
+    line-height: 1.7;
+    margin-bottom: 1.5rem;
+}
+
+.doc-list,
+.doc-steps {
+    padding-left: 1.25rem;
+    margin-bottom: 1.75rem;
+    color: #374151;
+}
+
+.doc-steps li::marker {
+    color: #2563eb;
+    font-weight: 700;
+}
+
+.doc-conclusion {
+    font-weight: 600;
+    color: #0f172a;
+    margin-top: 1rem;
+}
+
+.priority-badge {
+    background: linear-gradient(135deg, #f97316, #facc15);
+    color: #7c2d12 !important;
+    font-weight: 700;
+    border-radius: 999px;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+}
+
+@media (max-width: 991px) {
+    .doc-toc {
+        position: static;
+        margin-bottom: 1.5rem;
     }
 }
 </style>

@@ -69,6 +69,12 @@ def navigation_context(request):
                     'url': 'cube_3d_page',
                     'icon': 'fas fa-cube',
                     'description': 'Advanced 3D cube experience'
+                },
+                {
+                    'name': 'Quantum Camera Stream',
+                    'url': 'camera_service',
+                    'icon': 'fas fa-video',
+                    'description': 'Live video feed from the system camera'
                 }
             ]
         },
@@ -114,6 +120,14 @@ def navigation_context(request):
             'url_name': 'cube_3d_page',
             'icon': 'fas fa-cube',
             'description': 'Advanced 3D cube with quantum mechanics simulation'
+        },
+        {
+            'name': 'Quantum Camera Stream',
+            'path': '/services/camera/',
+            'file': 'camera_service.html',
+            'url_name': 'camera_service',
+            'icon': 'fas fa-video',
+            'description': 'Live MJPEG stream provided by the Django backend'
         }
     ]
 

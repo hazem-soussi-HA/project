@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Quantum Goose Project{% endblock %}</title>
+    <title>{% block title %}hazoom_sgi_llm - Quantum Goose Project{% endblock %}</title>
     
     <!-- Load Django static template tag -->
     {% load static %}
@@ -322,7 +322,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-6">
-                    <h5>Quantum Goose Project</h5>
+                    <h5>HAZoom SGI LLM - Quantum Goose Project</h5>
                     <p class="text-muted">{{ project_description|default:"Django + React Integration" }}</p>
                 </div>
                 <div class="col-md-6 text-end">
@@ -330,6 +330,9 @@
                         <i class="fas fa-heart text-danger"></i>
                         Built with Django {{ django_version|default:"latest" }}
                         {% if is_debug %}<span class="badge bg-warning ms-2">Debug Mode</span>{% endif %}
+                    </p>
+                    <p class="text-muted small mt-2">
+                        <i class="fas fa-copyright"></i> 2024 Hazem Soussi, Cloud Engineer. All rights reserved.
                     </p>
                 </div>
             </div>
@@ -500,19 +503,19 @@
                 <div class="service-menu-content">
                     <h5><i class="fas fa-cube"></i> Quick Services</h5>
                     <div class="service-menu-items">
-                        <a href="{% url 'quantum_navigator' %}" class="service-menu-item">
+                        <a href="{% url 'quantum_goose_app:quantum_navigator' %}" class="service-menu-item">
                             <i class="fas fa-compass"></i> Goose Navigator
                         </a>
-                        <a href="{% url 'quantum_cube_universe' %}" class="service-menu-item">
+                        <a href="{% url 'quantum_goose_app:quantum_cube_universe' %}" class="service-menu-item">
                             <i class="fas fa-cube"></i> Quantum Cube
                         </a>
-                        <a href="{% url 'max_hazoom_chat' %}" class="service-menu-item">
+                        <a href="{% url 'quantum_goose_app:max_hazoom_chat' %}" class="service-menu-item">
                             <i class="fas fa-comments"></i> Max Hazoom Chat
                         </a>
-                        <a href="{% url 'cube_3d_page' %}" class="service-menu-item">
+                        <a href="{% url 'quantum_goose_app:cube_3d_page' %}" class="service-menu-item">
                             <i class="fas fa-cube"></i> 3D Cube Page
                         </a>
-                        <a href="{% url 'services_index' %}" class="service-menu-item">
+                        <a href="{% url 'quantum_goose_app:services_index' %}" class="service-menu-item">
                             <i class="fas fa-th-large"></i> All Services
                         </a>
                     </div>

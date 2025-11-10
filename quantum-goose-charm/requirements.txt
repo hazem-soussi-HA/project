@@ -1,0 +1,61 @@
+# Juju and Operator Framework
+ops>=2.0.0
+charms.reactive>=2.0.0
+charmhelpers>=0.21.0
+
+# Django and Web Framework
+Django>=4.2.0
+django-extensions>=3.2.0
+django-cors-headers>=4.0.0
+channels>=4.0.0
+channels-redis>=4.1.0
+
+# Web Server
+gunicorn>=21.0.0
+uvicorn[standard]>=0.23.0
+
+# Database
+psycopg2-binary>=2.9.0
+redis>=4.6.0
+
+# LLM Integration
+openai>=2.7.0
+anthropic>=0.72.0
+requests>=2.31.0
+aiohttp>=3.8.0
+
+# Async and Concurrency
+asyncio-mqtt>=0.11.0
+celery>=5.3.0
+kombu>=5.3.0
+
+# System Monitoring
+psutil>=5.9.0
+prometheus-client>=0.17.0
+
+# Configuration Management
+pyyaml>=6.0
+python-decouple>=3.8
+
+# Development and Testing
+pytest>=7.4.0
+pytest-asyncio>=0.21.0
+pytest-django>=4.5.0
+coverage>=7.2.0
+
+# Logging and Utilities
+structlog>=23.1.0
+click>=8.1.0
+jinja2>=3.1.0
+
+# Security
+cryptography>=41.0.0
+pyjwt>=2.8.0
+
+# Deployment
+fabric>=3.2.0
+paramiko>=3.3.0
+
+# Build Tools
+setuptools>=68.0.0
+wheel>=0.41.0

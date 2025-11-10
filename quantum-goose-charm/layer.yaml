@@ -1,0 +1,89 @@
+name: quantum-goose
+description: |
+  Quantum Goose AI Assistant charm layer with Django backend,
+  React frontend, and LLM integration capabilities.
+
+bases:
+  - name: ubuntu
+    channel: "22.04"
+  - name: ubuntu
+    channel: "20.04"
+
+include:
+  - layer: basic
+  - layer: apt
+  - layer: python
+
+parts:
+  quantum-goose-base:
+    build-packages:
+      - git
+      - build-essential
+      - python3-dev
+      - python3-pip
+      - nginx
+      - redis-server
+      - postgresql-client
+      - supervisor
+      - curl
+      - jq
+    runtime-packages:
+      - python3.10
+      - python3.10-venv
+      - nginx
+      - redis-server
+      - supervisor
+      - postgresql-client
+    charm-packages:
+      - python3-openssl
+      - ca-certificates
+    source: src/
+    plugin: python
+    requirements: requirements.txt
+    python-requirements:
+      - ops>=2.0.0
+      - charms.reactive>=2.0.0
+      - charmhelpers>=0.21.0
+      - Django>=4.2.0
+      - openai>=2.7.0
+      - anthropic>=0.72.0
+      - psutil>=5.9.0
+
+  quantum-goose-django:
+    after:
+      - quantum-goose-base
+    build-packages:
+      - python3-django
+    charm-packages:
+      - libpython3.10-dev
+      - python3.10-distutils
+    source: quantum_goose_app/
+    plugin: python
+    requirements: requirements_django_only.txt
+
+  quantum-goose-react:
+    after:
+      - quantum-goose-base
+    build-packages:
+      - nodejs
+      - npm
+    charm-packages:
+      - nodejs
+    source: quantum-goose-app/
+    plugin: nodejs
+    requirements: package.json
+
+  quantum-goose-nginx:
+    plugin: nginx
+    config:
+      /etc/nginx/sites-available/quantum-goose:
+        enabled: true
+        default_server: true
+    source: src/templates/
+
+  quantum-goose-systemd:
+    plugin: systemd
+    source: src/templates/systemd.service.j2
+    after:
+      - quantum-goose-django
+      - quantum-goose-react

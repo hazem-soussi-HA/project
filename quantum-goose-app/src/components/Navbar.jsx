@@ -20,6 +20,12 @@ const Navbar = ({ onToggleCollapse }) => {
       description: 'Main Hub'
     },
     {
+      path: '/llm/system-info',
+      title: 'System Intelligence',
+      icon: '🖥️',
+      description: 'System Status & Hardware'
+    },
+    {
       path: '/travel',
       title: 'Quantum Travel',
       icon: '🚀',
@@ -38,16 +44,64 @@ const Navbar = ({ onToggleCollapse }) => {
       description: 'Pure Quantum Experience'
     },
     {
+      path: '/hazoom-llm',
+      title: 'HAZoom LLM',
+      icon: '⚡',
+      description: 'Super Intelligence Chat'
+    },
+    {
+      path: '/memory',
+      title: 'Memory Dashboard',
+      icon: '💾',
+      description: 'Persistent Memory System'
+    },
+    {
+      path: '/models',
+      title: 'Model Manager',
+      icon: '🤖',
+      description: 'AI Model Management'
+    },
+    {
+      path: '/quick-navigator',
+      title: 'Quick Model Navigator',
+      icon: '⚡',
+      description: 'Fast Model Selection & Chat'
+    },
+    {
       path: '/max-hazoom-chat',
       title: 'Max Hazoom Chat',
       icon: '💬',
       description: 'Original Chat Interface'
     },
     {
+      path: '/quantum-hub',
+      title: 'Quantum Hub',
+      icon: '🌌',
+      description: 'Central Navigation Point'
+    },
+    {
+      path: '/magic-cube',
+      title: 'Magic Travel Cube',
+      icon: '🎲',
+      description: 'Universal Portal System'
+    },
+    {
       path: '/legacy-cube',
       title: 'Legacy 3D Cube',
-      icon: '🎲',
+      icon: '🎯',
       description: 'Legacy 3D Experience'
+    },
+    {
+      path: '/mobile-app',
+      title: 'Mobile Cosmos App',
+      icon: '📱',
+      description: 'Mobile Cosmos Interface'
+    },
+    {
+      path: '/video-chat',
+      title: 'Video Streaming Chat',
+      icon: '🎥',
+      description: 'AI-Powered Video Communication'
     }
   ];
 
@@ -78,7 +132,7 @@ const Navbar = ({ onToggleCollapse }) => {
 
         <div className="nav-sections">
           <div className="nav-section">
-            <h3 className="nav-section-title">🚀 Navigation</h3>
+            <h3 className="nav-section-title">🏠 Main Hub</h3>
             <div className="nav-links">
               {navItems.map((item) => (
                 <Link
@@ -99,17 +153,17 @@ const Navbar = ({ onToggleCollapse }) => {
           <div className="nav-section">
             <h3 className="nav-section-title">⚡ Quick Actions</h3>
             <div className="quick-actions">
-              <button className="action-btn" onClick={() => window.location.href = '/quantum-navigator'}>
-                <span className="action-icon">🔬</span>
-                <span>Quantum Science</span>
-              </button>
-              <button className="action-btn" onClick={() => window.location.href = '/quantum-cube'}>
-                <span className="action-icon">🎨</span>
-                <span>Cube Experience</span>
-              </button>
-              <button className="action-btn" onClick={() => window.location.href = '/quantum-navigator'}>
+              <button className="action-btn" onClick={() => window.location.href = '/hazoom-llm'}>
                 <span className="action-icon">🧠</span>
-                <span>AI Chat</span>
+                <span>Super Intelligence Chat</span>
+              </button>
+              <button className="action-btn" onClick={() => window.location.href = '/memory'}>
+                <span className="action-icon">💾</span>
+                <span>Memory Dashboard</span>
+              </button>
+              <button className="action-btn" onClick={() => window.location.href = '/llm/system-info'}>
+                <span className="action-icon">🖥️</span>
+                <span>System Intelligence</span>
               </button>
             </div>
           </div>
@@ -125,9 +179,9 @@ const Navbar = ({ onToggleCollapse }) => {
                 <span className="control-icon">💾</span>
                 <span>Export Data</span>
               </button>
-              <button className="control-btn" onClick={() => alert('Settings functionality coming soon!')}>
-                <span className="control-icon">⚙️</span>
-                <span>Settings</span>
+              <button className="control-btn" onClick={() => window.location.href = '/llm/system-info'}>
+                <span className="control-icon">🔧</span>
+                <span>System Settings</span>
               </button>
             </div>
           </div>

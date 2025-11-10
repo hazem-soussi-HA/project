@@ -1,0 +1,77 @@
+name: quantum-goose-charm
+summary: Super intelligent AI assistant with modular charm architecture
+description: |
+  HAZoom is a super-intelligent AI assistant built on Django with React frontend
+  and advanced LLM integration. This charm provides a complete web application
+  with real-time chat capabilities, multiple intelligence levels, and enterprise
+  features.
+  
+  Features:
+  - Django backend with async LLM integration
+  - React frontend with real-time streaming
+  - Multiple LLM provider support (OpenAI, Anthropic, Ollama)
+  - WebSocket support for live conversations
+  - Intelligent level routing (Nano, Standard, Super, Quantum)
+  - System monitoring and performance metrics
+  - Modular, composable charm architecture
+
+series:
+  - focal
+  - jammy
+  - kinetic
+
+provides:
+  website:
+    interface: http
+    optional: true
+  api:
+    interface: http
+    optional: true
+
+requires:
+  database:
+    interface: mysql
+    optional: true
+  redis:
+    interface: redis
+    optional: true
+  llm-service:
+    interface: http
+    optional: true
+
+peers:
+  cluster:
+    interface: quantum-goose-cluster
+
+tags:
+  - ai
+  - machine-learning
+  - web
+  - python
+  - django
+  - react
+  - llm
+
+assumes:
+  - juju >= 3.0
+  - k8s-api
+
+resources:
+  django-app:
+    type: file
+    description: Django application archive
+    filename: django-app.zip
+  
+  react-frontend:
+    type: file
+    description: React frontend build
+    filename: react-frontend.tar.gz
+  
+  llm-models:
+    type: file
+    description: Local LLM models for offline use
+    filename: llm-models.tar.gz
+
+extra-bindings:
+  admin:
+    description: Binding for admin interface

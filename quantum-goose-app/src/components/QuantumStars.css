@@ -1,0 +1,123 @@
+.quantum-stars-container {
+  position: fixed;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 300px;
+  height: 500px;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.6;
+  transition: opacity 0.3s ease;
+}
+
+.quantum-stars-container:hover {
+  opacity: 0.8;
+}
+
+.quantum-stars-canvas {
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 0 10px rgba(59, 130, 246, 0.3));
+}
+
+.quantum-stars-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 20px;
+  background: linear-gradient(to top,
+    rgba(15, 23, 42, 0.9) 0%,
+    rgba(15, 23, 42, 0.6) 50%,
+    transparent 100%);
+  pointer-events: none;
+}
+
+.stars-info {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.stars-stat {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: white;
+  font-size: 0.85rem;
+}
+
+.stars-icon {
+  font-size: 1.2rem;
+  width: 24px;
+  text-align: center;
+  filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.5));
+}
+
+.stars-label {
+  flex: 1;
+  font-weight: 600;
+  opacity: 0.9;
+}
+
+.stars-value {
+  font-weight: 700;
+  color: #60a5fa;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+}
+
+/* Animated glow effect */
+.quantum-stars-container::before {
+  content: '';
+  position: absolute;
+  top: -20px;
+  left: -20px;
+  right: -20px;
+  bottom: -20px;
+  background: radial-gradient(circle, rgba(59, 130, 246, 0.1) 0%, transparent 70%);
+  animation: pulse 4s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 0.3;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.6;
+    transform: scale(1.05);
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 1200px) {
+  .quantum-stars-container {
+    width: 250px;
+    height: 400px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .quantum-stars-container {
+    width: 200px;
+    height: 350px;
+    opacity: 0.4;
+  }
+}
+
+@media (max-width: 768px) {
+  .quantum-stars-container {
+    display: none;
+  }
+}
+
+/* Dark theme enhancement */
+@media (prefers-color-scheme: dark) {
+  .quantum-stars-container {
+    filter: drop-shadow(0 0 15px rgba(59, 130, 246, 0.4));
+  }
+}

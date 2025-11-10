@@ -1,0 +1,410 @@
+.magic-travel-container {
+  position: relative;
+  min-height: 100vh;
+  background: radial-gradient(ellipse at center, #0a0e27 0%, #000000 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.particle-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transition: opacity 1s ease-in-out;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.particle-canvas.active {
+  opacity: 1;
+}
+
+.magic-cube-wrapper {
+  perspective: 1000px;
+  z-index: 10;
+  position: relative;
+}
+
+.magic-cube {
+  width: 200px;
+  height: 200px;
+  position: relative;
+  transform-style: preserve-3d;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.magic-cube.rotating {
+  animation: rotateCube 10s infinite linear;
+}
+
+.magic-cube:hover {
+  transform: scale(1.1);
+}
+
+.magic-cube.portal-active {
+  animation: portalGlow 2s ease-in-out infinite alternate;
+}
+
+.cube-face {
+  position: absolute;
+  width: 200px;
+  height: 200px;
+  border: 2px solid rgba(100, 200, 255, 0.8);
+  background: linear-gradient(135deg, rgba(100, 200, 255, 0.1), rgba(150, 100, 255, 0.2));
+  backdrop-filter: blur(10px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 48px;
+  color: #64c8ff;
+  text-shadow: 0 0 20px rgba(100, 200, 255, 0.8);
+  box-shadow: 
+    inset 0 0 30px rgba(100, 200, 255, 0.3),
+    0 0 50px rgba(100, 200, 255, 0.2);
+}
+
+.cube-front {
+  transform: translateZ(100px);
+}
+
+.cube-back {
+  transform: rotateY(180deg) translateZ(100px);
+}
+
+.cube-right {
+  transform: rotateY(90deg) translateZ(100px);
+}
+
+.cube-left {
+  transform: rotateY(-90deg) translateZ(100px);
+}
+
+.cube-top {
+  transform: rotateX(90deg) translateZ(100px);
+}
+
+.cube-bottom {
+  transform: rotateX(-90deg) translateZ(100px);
+}
+
+.cube-symbol {
+  animation: symbolPulse 3s ease-in-out infinite;
+}
+
+.destinations-panel {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(10, 14, 39, 0.95);
+  border: 2px solid rgba(100, 200, 255, 0.5);
+  border-radius: 20px;
+  padding: 30px;
+  z-index: 20;
+  backdrop-filter: blur(20px);
+  box-shadow: 0 0 50px rgba(100, 200, 255, 0.3);
+  max-width: 800px;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.destinations-panel h3 {
+  color: #64c8ff;
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 24px;
+  text-shadow: 0 0 10px rgba(100, 200, 255, 0.8);
+}
+
+.destinations-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+}
+
+.destination-card {
+  background: rgba(20, 30, 60, 0.8);
+  border: 2px solid transparent;
+  border-radius: 15px;
+  padding: 15px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: center;
+}
+
+.destination-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 30px rgba(100, 200, 255, 0.4);
+  background: rgba(30, 40, 80, 0.9);
+}
+
+.destination-preview {
+  width: 100%;
+  height: 100px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 10px;
+  position: relative;
+  overflow: hidden;
+}
+
+.destination-preview::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+  animation: shimmer 3s infinite;
+}
+
+.destination-icon {
+  font-size: 36px;
+  animation: iconFloat 2s ease-in-out infinite;
+}
+
+.destination-card h4 {
+  color: #ffffff;
+  margin: 10px 0 5px 0;
+  font-size: 16px;
+}
+
+.destination-card p {
+  color: #8899aa;
+  font-size: 12px;
+  margin: 0;
+}
+
+.controls {
+  position: absolute;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 20px;
+  z-index: 15;
+}
+
+.control-btn {
+  background: linear-gradient(135deg, rgba(100, 200, 255, 0.2), rgba(150, 100, 255, 0.3));
+  border: 2px solid rgba(100, 200, 255, 0.5);
+  color: #64c8ff;
+  padding: 12px 24px;
+  border-radius: 25px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: bold;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+}
+
+.control-btn:hover {
+  background: linear-gradient(135deg, rgba(100, 200, 255, 0.4), rgba(150, 100, 255, 0.5));
+  transform: translateY(-2px);
+  box-shadow: 0 5px 20px rgba(100, 200, 255, 0.4);
+}
+
+.portal-btn {
+  background: linear-gradient(135deg, rgba(255, 100, 150, 0.3), rgba(255, 150, 100, 0.3));
+  border-color: rgba(255, 100, 150, 0.6);
+  color: #ff6496;
+}
+
+.portal-btn:hover {
+  background: linear-gradient(135deg, rgba(255, 100, 150, 0.5), rgba(255, 150, 100, 0.5));
+  box-shadow: 0 5px 20px rgba(255, 100, 150, 0.4);
+}
+
+.info-panel {
+  position: absolute;
+  top: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  z-index: 15;
+  background: rgba(10, 14, 39, 0.8);
+  padding: 20px 30px;
+  border-radius: 15px;
+  border: 1px solid rgba(100, 200, 255, 0.3);
+  backdrop-filter: blur(10px);
+}
+
+.info-panel h2 {
+  color: #64c8ff;
+  margin: 0 0 10px 0;
+  font-size: 28px;
+  text-shadow: 0 0 15px rgba(100, 200, 255, 0.8);
+}
+
+.info-panel p {
+  color: #8899aa;
+  margin: 0;
+  font-size: 14px;
+}
+
+.selected-destination {
+  margin-top: 15px;
+  padding-top: 15px;
+  border-top: 1px solid rgba(100, 200, 255, 0.3);
+}
+
+.selected-destination p {
+  color: #ffffff;
+  font-size: 16px;
+}
+
+@keyframes rotateCube {
+  0% {
+    transform: rotateX(0deg) rotateY(0deg);
+  }
+  100% {
+    transform: rotateX(360deg) rotateY(360deg);
+  }
+}
+
+@keyframes portalGlow {
+  0% {
+    filter: drop-shadow(0 0 20px rgba(100, 200, 255, 0.8));
+  }
+  100% {
+    filter: drop-shadow(0 0 40px rgba(255, 100, 150, 1));
+  }
+}
+
+@keyframes portalOpen {
+  0% {
+    transform: scale(1) rotateX(0deg) rotateY(0deg);
+  }
+  50% {
+    transform: scale(1.5) rotateX(180deg) rotateY(180deg);
+    filter: brightness(2) saturate(2);
+  }
+  100% {
+    transform: scale(1) rotateX(360deg) rotateY(360deg);
+  }
+}
+
+@keyframes travelSequence {
+  0% {
+    transform: scale(1) rotateX(0deg) rotateY(0deg);
+  }
+  25% {
+    transform: scale(0.5) rotateX(720deg) rotateY(720deg);
+    opacity: 0.5;
+  }
+  50% {
+    transform: scale(2) rotateX(1440deg) rotateY(1440deg);
+    opacity: 1;
+    filter: hue-rotate(180deg);
+  }
+  75% {
+    transform: scale(1.5) rotateX(2160deg) rotateY(2160deg);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(1) rotateX(2880deg) rotateY(2880deg);
+    opacity: 1;
+  }
+}
+
+@keyframes symbolPulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 1;
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%) translateY(-100%) rotate(45deg);
+  }
+  100% {
+    transform: translateX(100%) translateY(100%) rotate(45deg);
+  }
+}
+
+@keyframes iconFloat {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@media (max-width: 768px) {
+  .magic-cube {
+    width: 150px;
+    height: 150px;
+  }
+  
+  .cube-face {
+    width: 150px;
+    height: 150px;
+    font-size: 36px;
+  }
+  
+  .cube-front {
+    transform: translateZ(75px);
+  }
+  
+  .cube-back {
+    transform: rotateY(180deg) translateZ(75px);
+  }
+  
+  .cube-right {
+    transform: rotateY(90deg) translateZ(75px);
+  }
+  
+  .cube-left {
+    transform: rotateY(-90deg) translateZ(75px);
+  }
+  
+  .cube-top {
+    transform: rotateX(90deg) translateZ(75px);
+  }
+  
+  .cube-bottom {
+    transform: rotateX(-90deg) translateZ(75px);
+  }
+  
+  .destinations-panel {
+    padding: 20px;
+    max-width: 90vw;
+  }
+  
+  .destinations-grid {
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 15px;
+  }
+  
+  .controls {
+    flex-direction: column;
+    gap: 10px;
+    bottom: 20px;
+  }
+  
+  .info-panel {
+    top: 20px;
+    padding: 15px 20px;
+  }
+  
+  .info-panel h2 {
+    font-size: 24px;
+  }
+}

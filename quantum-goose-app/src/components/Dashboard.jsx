@@ -108,6 +108,13 @@ const Dashboard = ({ sidebarCollapsed = false }) => {
     { label: 'Travel Destinations', value: '6', icon: '🚀' }
   ];
 
+  const systemStats = [
+    { label: 'System Status', value: 'Optimal', icon: '⚡', status: 'active' },
+    { label: 'AI Acceleration', value: 'CUDA', icon: '🧠', status: 'active' },
+    { label: 'Memory Usage', value: '62.1%', icon: '💾', status: 'warning' },
+    { label: 'Server Health', value: '2/3', icon: '🌐', status: 'warning' }
+  ];
+
   return (
     <div className="dashboard">
       {/* Hero Section */}
@@ -182,24 +189,22 @@ const Dashboard = ({ sidebarCollapsed = false }) => {
       {/* System Status */}
       <div className="system-status">
         <div className="status-card">
-          <h3>⚡ System Status</h3>
-          <div className="status-grid">
-            <div className="status-item">
-              <span className="status-label">Quantum Engine:</span>
-              <span className="status-value active">Online</span>
-            </div>
-            <div className="status-item">
-              <span className="status-label">Consciousness Matrix:</span>
-              <span className="status-value active">Active</span>
-            </div>
-            <div className="status-item">
-              <span className="status-label">Reality Stability:</span>
-              <span className="status-value stable">Stable</span>
-            </div>
-            <div className="status-item">
-              <span className="status-label">AI Processing:</span>
-              <span className="status-value active">Optimal</span>
-            </div>
+          <h3>⚡ System Intelligence Status</h3>
+          <div className="system-status-grid">
+            {systemStats.map((stat, index) => (
+              <div key={index} className="system-status-item">
+                <span className="status-icon">{stat.icon}</span>
+                <div className="status-info">
+                  <span className="status-title">{stat.label}</span>
+                  <span className={`status-value ${stat.status}`}>{stat.value}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+          <div className="system-actions-quick">
+            <Link to="/llm/system-info" className="system-action-link">
+              <span>🔧</span> View System Dashboard
+            </Link>
           </div>
         </div>
       </div>

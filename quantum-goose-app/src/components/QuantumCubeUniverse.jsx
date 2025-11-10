@@ -48,8 +48,8 @@ const QuantumCubeUniverse = ({ sidebarCollapsed = false }) => {
   };
 
   useEffect(() => {
-    // Initialize quantum particles
-    createQuantumParticles();
+    // Initialize matrix particles
+    createMatrixParticles();
     
     // Start wisdom cycling
     const wisdomInterval = setInterval(() => {
@@ -61,10 +61,22 @@ const QuantumCubeUniverse = ({ sidebarCollapsed = false }) => {
     return () => clearInterval(wisdomInterval);
   }, [isPaused, quantumState]);
 
-  const createQuantumParticles = () => {
-    // This would typically create floating particles
-    // For now, we'll just log that particles are being created
-    console.log('Creating quantum particles...');
+  const createMatrixParticles = () => {
+    const container = document.getElementById('matrixParticles');
+    if (!container) return;
+    
+    // Clear existing particles
+    container.innerHTML = '';
+    
+    // Create matrix grid particles
+    for (let i = 0; i < 20; i++) {
+      const particle = document.createElement('div');
+      particle.className = 'matrix-particle';
+      particle.style.left = `${Math.random() * 100}%`;
+      particle.style.animationDelay = `${Math.random() * 8}s`;
+      particle.style.animationDuration = `${8 + Math.random() * 4}s`;
+      container.appendChild(particle);
+    }
   };
 
   const quantumPause = () => {
@@ -141,7 +153,7 @@ const QuantumCubeUniverse = ({ sidebarCollapsed = false }) => {
 
       {/* Main Scene */}
       <div className="organic-scene">
-        <div className="quantum-particles" id="quantumParticles"></div>
+        <div className="matrix-particles" id="matrixParticles"></div>
         
         <div 
           className="quantum-cube" 
@@ -151,12 +163,30 @@ const QuantumCubeUniverse = ({ sidebarCollapsed = false }) => {
           }}
           onClick={spawnEntities}
         >
-          <div className="quantum-face face-quantum">QUANTUM</div>
-          <div className="quantum-face face-void">VOID</div>
-          <div className="quantum-face face-energy">ENERGY</div>
-          <div className="quantum-face face-matter">MATTER</div>
-          <div className="quantum-face face-time">TIME</div>
-          <div className="quantum-face face-space">SPACE</div>
+          <div className="quantum-face face-quantum">
+            <span>QUANTUM</span>
+            <div className="face-grid"></div>
+          </div>
+          <div className="quantum-face face-void">
+            <span>VOID</span>
+            <div className="face-grid"></div>
+          </div>
+          <div className="quantum-face face-energy">
+            <span>ENERGY</span>
+            <div className="face-grid"></div>
+          </div>
+          <div className="quantum-face face-matter">
+            <span>MATTER</span>
+            <div className="face-grid"></div>
+          </div>
+          <div className="quantum-face face-time">
+            <span>TIME</span>
+            <div className="face-grid"></div>
+          </div>
+          <div className="quantum-face face-space">
+            <span>SPACE</span>
+            <div className="face-grid"></div>
+          </div>
         </div>
       </div>
 
